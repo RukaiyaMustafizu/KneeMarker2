@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KneeMarker AI Assistant</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-color: #4a6fa5;
+        --secondary-color: #166088;
+        --accent-color: #4fc3f7;
+        --light-color: #f8f9fa;
+        --dark-color: #212529;
+      }
+      h1 {
+        font-weight: bolder;
+       font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+       font-size: 40px;
+       color: rgb(16, 59, 69);
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-image: url('kneemarker-icon.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+      }
+      
+      /* Main container */
+      .test-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        background: rgba(218, 219, 192, 0.964);
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        backdrop-filter: blur(5px);
+      }
+
+      /* Info section */
+      .info-section {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .info-section h3 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+      }
+
+      /* Language toggle */
+      .language-toggle {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1000;
+      }
+
+      /* AI Assistant Button */
+     /* AI Assistant Button */
+#ai-assistant-btn {
+  position: fixed;
+  bottom: 0.5rem;
+  right: 2rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  z-index: 1050; /* Ensure it's above other elements */
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#ai-assistant-btn:hover {
+  background: var(--secondary-color);
+  transform: scale(1.05);
+}
+
+#ai-assistant-btn .badge {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  background: var(--accent-color);
+  color: white;
+}
+
+      /* AI Chat Container */
+      #ai-assistant-container {
+        position: fixed;
+        bottom: 5.5rem;
+        right: 2rem;
+        width: 380px;
+        max-width: 90vw;
+        height: 600px;
+        max-height: 80vh;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        display: none;
+        flex-direction: column;
+        z-index: 1050;
+        overflow: hidden;
+        transform-origin: bottom right;
+        animation: fadeIn 0.2s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* Chat header */
+      .ai-chat-header {
+        background: var(--primary-color);
+        color: white;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .ai-chat-header h5 {
+        margin: 0;
+        font-weight: 600;
+      }
+
+      .ai-close-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.25rem;
+        cursor: pointer;
+      }
+
+      /* Chat body */
+      .ai-chat-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem;
+        background: #f9f9f9;
+      }
+
+      /* Message styles */
+      .message {
+        margin-bottom: 1rem;
+        max-width: 80%;
+        animation: messageIn 0.2s ease-out;
+      }
+
+      @keyframes messageIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .user-message {
+        margin-left: auto;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 18px 18px 4px 18px;
+        padding: 0.75rem 1rem;
+      }
+
+      .assistant-message {
+        margin-right: auto;
+        background: white;
+        color: var(--dark-color);
+        border-radius: 18px 18px 18px 4px;
+        padding: 0.75rem 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .thinking-message {
+        color: #666;
+        font-style: italic;
+        text-align: center;
+        padding: 0.5rem;
+      }
+
+      /* Chat input area */
+      .ai-chat-input {
+        display: flex;
+        padding: 1rem;
+        background: white;
+        border-top: 1px solid #eee;
+      }
+
+      .ai-chat-input input {
+        flex: 1;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        padding: 0.5rem 1rem;
+        outline: none;
+        transition: border 0.2s;
+      }
+
+      .ai-chat-input input:focus {
+        border-color: var(--accent-color);
+      }
+
+      .ai-send-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        margin-left: 0.5rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .ai-send-btn:hover {
+        background: var(--secondary-color);
+      }
+
+      /* Quick action buttons */
+      .quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .quick-action-btn {
+        background: #e9ecef;
+        border: none;
+        border-radius: 20px;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .quick-action-btn:hover {
+        background: #dee2e6;
+      }
+      
+      #analyzeBtn {
+        background:rgba(128, 0, 128, 0.803);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+      }
+      
+      #analyzeBtn:hover {
+        background: rgb(159, 54, 159);
+        transform: scale(1.05);
+      }
+
+      /* Test strip upload area */
+      .upload-area {
+        border: 2px dashed #ddd;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-bottom: 1rem;
+        position: relative;
+      }
+
+      .upload-area:hover {
+        border-color: var(--accent-color);
+        background: rgba(79, 195, 247, 0.05);
+      }
+
+      .clear-upload {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: rgba(0, 0, 0, 0.2);
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .clear-upload:hover {
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      /* Test result display */
+      .test-result {
+        margin-top: 1rem;
+        text-align: center;
+      }
+
+      .test-result-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        max-height: 200px;
+      }
+
+      /* Video section */
+      .video-section {
+        text-align: center;
+        margin-top: 2rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+      
+      .video-container {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        height: 0;
+        overflow: hidden;
+        margin-bottom: 1rem;
+        background: #000; /* Shows black background if video fails */
+      }
+
+      .video-container video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 80%;
+        height: 80%;
+        border-radius: 8px;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        #ai-assistant-container {
+          width: 90vw;
+          right: 5vw;
+        }
+
+        .test-container {
+          margin: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <!-- Language Toggle -->
+      <div class="language-toggle">
+        <select
+          id="languageSelector"
+          class="form-select form-select-sm"
+          style="width: auto"
+        >
+          <option value="en">English</option>
+          <option value="nl">Dutch</option>
+        </select>
+      </div>
+
+      <!-- Main Test Container -->
+      <div class="test-container p-4">
+       <h1 class="text-center mb-4" data-lang="title">
+         KneeMarker Test
+       </h1>
+
+        <!-- Information Section -->
+        <div class="info-section">
+          <h3>
+            <i class="fas fa-info-circle me-2"></i>
+            <span data-lang="about-test">About the Test</span>
+          </h3>
+          <p data-lang="test-description">
+            The KneeMarker test is a rapid urine test designed to detect early
+            signs of osteoarthritis (OA) in patients recovering from ACL
+            injuries. It measures two key biomarkers of cartilage degradation:
+          </p>
+          <ul>
+            <li><strong>CTX-II</strong> (C-Telopeptide of type II collagen)</li>
+            <li><strong>COMP</strong> (Cartilage Oligomeric Matrix Protein)</li>
+          </ul>
+          <p data-lang="test-details">
+            These biomarkers help indicate cartilage breakdown before visible
+            symptoms appear. The test is 98% accurate when used correctly and
+            provides results in just 10 minutes.
+          </p>
+
+          <div class="accordion mt-3" id="infoAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#howItWorks"
+                  data-lang="how-it-works"
+                >
+                  How It Works
+                </button>
+              </h2>
+              <div
+                id="howItWorks"
+                class="accordion-collapse collapse"
+                data-bs-parent="#infoAccordion"
+              >
+                <div class="accordion-body">
+                  <p data-lang="how-works-1">
+                    The test uses lateral flow immunoassay technology with gold
+                    nanoparticle-conjugated antibodies that specifically bind to
+                    CTX-II and COMP biomarkers in urine. When these biomarkers
+                    are present, they form visible lines on the test strip.
+                  </p>
+                  <p data-lang="how-works-2">
+                    The intensity of the lines correlates with biomarker
+                    concentration, allowing for semi-quantitative assessment of
+                    cartilage degradation.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#clinicalSignificance"
+                  data-lang="clinical-significance"
+                >
+                  Clinical Significance
+                </button>
+              </h2>
+              <div
+                id="clinicalSignificance"
+                class="accordion-collapse collapse"
+                data-bs-parent="#infoAccordion"
+              >
+                <div class="accordion-body">
+                  <p data-lang="early-detection">
+                    Early detection of osteoarthritis allows for:
+                  </p>
+                  <ul>
+                    <li data-lang="therapy">
+                      Timely intervention with physical therapy
+                    </li>
+                    <li data-lang="lifestyle">
+                      Lifestyle modifications to slow progression
+                    </li>
+                    <li data-lang="trials">
+                      Potential enrollment in clinical trials for new treatments
+                    </li>
+                    <li data-lang="surgery">
+                      Better surgical outcomes when addressed early
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-center mb-4" data-lang="intro">
+          Upload a photo of your test strip to begin analysis.
+        </p>
+
+        <div class="upload-area" id="uploadArea">
+          <i
+            class="fas fa-cloud-upload-alt fa-3x mb-3"
+            style="color: var(--primary-color)"
+          ></i>
+          <h5 data-lang="upload-text">
+            Drag & drop your test strip image here
+          </h5>
+          <p class="text-muted" data-lang="or-text">or click to browse files</p>
+          <input type="file" id="fileInput" accept="image/*" class="d-none" />
+        </div>
+
+        <button
+          id="analyzeBtn"
+          class="btn btn-primary w-100 py-2"
+          data-lang="analyze"
+        >
+          <i class="fas fa-search me-2"></i> Analyze
+        </button>
+
+        <div id="resultContainer" class="mt-4 text-center"></div>
+
+        <div class="video-section">
+  <h5><i class="fas fa-video me-2"></i> <span data-lang="video-title">Watch more about KneeMarker</span></h5>
+  <p data-lang="video-description">Watch this video for more context</p>
+
+  <div class="video-container" style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
+    <iframe 
+      src="https://www.youtube.com/embed/HTEPBt5i8LM" 
+      title="KneeMarker Video"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen 
+      style="position:absolute; top:0; left:0; width:100%; height:100%;">
+    </iframe>
+  </div>
+
+  <p class="small text-muted" data-lang="video-scan-note">
+    Scan the QR code on your test kit to access this video, & other features.
+  </p>
+</div>
+
+
+      <!-- AI Assistant Floating Button -->
+      <button id="ai-assistant-btn" class="btn">
+        <i class="fas fa-robot"></i>
+        <span class="badge bg-danger rounded-pill">Need Help?
+          <span class="visually-hidden">AI Assistant</span>
+          😄
+        </span>
+      </button>
+
+      <!-- AI Assistant Chat Container -->
+      <div id="ai-assistant-container">
+        <div class="ai-chat-header">
+          <h5>
+            <i class="fas fa-robot me-2"></i>
+            <span data-lang="ai-title">KneeMarker Assistant</span>
+          </h5>
+          <button class="ai-close-btn" id="ai-close-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div class="ai-chat-body" id="ai-chat-body">
+          <!-- Messages will appear here -->
+          <div class="message assistant-message">
+            <div class="d-flex align-items-center mb-1">
+              <strong data-lang="ai-name">KneeMarker AI</strong>
+              <small class="text-muted ms-2"></small>
+            </div>
+            <div data-lang="ai-welcome">
+              Hello! I'm your KneeMarker assistant. I can help you with:
+            </div>
+            <ul>
+              <li data-lang="ai-help-1">Interpreting your test results</li>
+              <li data-lang="ai-help-2">Explaining how the test works</li>
+              <li data-lang="ai-help-3">
+                Answering questions about osteoarthritis
+              </li>
+              <li data-lang="ai-help-4">Providing guidance on next steps</li>
+            </ul>
+            <div data-lang="ai-prompt">How can I help you today?</div>
+          </div>
+
+          <div class="quick-actions mt-3">
+            <button
+              class="quick-action-btn"
+              data-question="What does a positive test mean?"
+              data-lang="quick-action-1"
+            >
+              Positive test meaning
+            </button>
+            <button
+              class="quick-action-btn"
+              data-question="How should I store my test?"
+              data-lang="quick-action-2"
+            >
+              Test storage
+            </button>
+            <button
+              class="quick-action-btn"
+              data-question="Can I reuse the test?"
+              data-lang="quick-action-3"
+            >
+              Reuse test?
+            </button>
+          </div>
+        </div>
+
+        <div class="ai-chat-input">
+          <input
+            type="text"
+            id="ai-user-input"
+            placeholder="Ask me about your test..."
+            autocomplete="off"
+            data-lang="ai-placeholder"
+          />
+          <button class="ai-send-btn" id="ai-send-btn">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // SheCodes API Key
+      const apiKey = "tf315a00255a026o44c386706557b731";
+      
+      // Enhanced Translations with complete Dutch support
+      const translations = {
+        en: {
+          title: "KneeMarker Test",
+          "about-test": "About the Test",
+          "test-description":
+            "The KneeMarker test is a rapid urine test designed to detect early signs of osteoarthritis (OA) in patients recovering from ACL injuries. It measures two key biomarkers of cartilage degradation:",
+          "test-details":
+            "These biomarkers help indicate cartilage breakdown before visible symptoms appear. The test is 98% accurate when used correctly and provides results in just 10 minutes.",
+          "how-it-works": "How It Works",
+          "how-works-1":
+            "The test uses lateral flow immunoassay technology with gold nanoparticle-conjugated antibodies that specifically bind to CTX-II and COMP biomarkers in urine. When these biomarkers are present, they form visible lines on the test strip.",
+          "how-works-2":
+            "The intensity of the lines correlates with biomarker concentration, allowing for semi-quantitative assessment of cartilage degradation.",
+          "clinical-significance": "Clinical Significance",
+          "early-detection": "Early detection of osteoarthritis allows for:",
+          therapy: "Timely intervention with physical therapy",
+          lifestyle: "Lifestyle modifications to slow progression",
+          trials: "Potential enrollment in clinical trials for new treatments",
+          surgery: "Better surgical outcomes when addressed early",
+          intro: "Upload a photo of your test strip to begin analysis.",
+          analyze: "Analyze",
+          analyzing: "Analyzing...",
+          result: "Analysis complete! Result: Positive",
+          "upload-text": "Drag & drop your test strip image here",
+          "or-text": "or click to browse files",
+          "positive-result":
+            "Positive - Cartilage degradation biomarkers detected",
+          "negative-result": "Negative - No biomarkers detected",
+          "invalid-result": "Invalid - Please repeat the test",
+          "upload-error": "Please upload an image first",
+          "video-title": "How to Use the Test",
+          "video-description":
+            "Watch this instructional video for proper test procedure",
+          "video-scan-note":
+            "Scan the QR code on your test kit to access this video",
+          "ai-title": "KneeMarker Assistant",
+          "ai-name": "KneeMarker AI",
+          "ai-welcome":
+            "Hello! I'm your KneeMarker assistant. I can help you with:",
+          "ai-help-1": "Interpreting your test results",
+          "ai-help-2": "Explaining how the test works",
+          "ai-help-3": "Answering questions about osteoarthritis",
+          "ai-help-4": "Providing guidance on next steps",
+          "ai-prompt": "How can I help you today?",
+          "ai-placeholder": "Ask me about your test...",
+          "quick-action-1": "Positive test meaning",
+          "quick-action-2": "Test storage",
+          "quick-action-3": "Reuse test?",
+          "positive-interpretation":
+            "Two lines detected (T and C lines). This indicates the presence of cartilage degradation biomarkers (CTX-II and/or COMP).",
+          "positive-action":
+            "Consult with your healthcare provider to discuss the results and potential next steps for managing joint health.",
+          "negative-interpretation":
+            "Only the control line (C line) detected. No significant levels of cartilage degradation biomarkers were found.",
+          "negative-action":
+            "Continue monitoring as recommended by your healthcare provider. Retest in 3-6 months or if symptoms develop.",
+          "invalid-interpretation":
+            "No control line detected. This may be due to:",
+          "invalid-reason-1": "Insufficient sample volume",
+          "invalid-reason-2": "Expired test kit",
+          "invalid-reason-3": "Improper test execution",
+          "invalid-action":
+            "Repeat the test with a fresh urine sample and new test kit if available.",
+          "share-results": "Share Results",
+          "download-report": "Download Report",
+        },
+        nl: {
+          title: "KneeMarker Test",
+          "about-test": "Over de Test",
+          "test-description":
+            "De KneeMarker-test is een snelle urinetest die vroege tekenen van artrose (OA) opspoort bij patiënten die herstellen van ACL-verwondingen. Het meet twee belangrijke biomarkers voor kraakbeenafbraak:",
+          "test-details":
+            "Deze biomarkers helpen bij het aangeven van kraakbeenafbraak voordat zichtbare symptomen verschijnen. De test is 98% nauwkeurig bij correct gebruik en geeft resultaten in slechts 10 minuten.",
+          "how-it-works": "Hoe het Werkt",
+          "how-works-1":
+            "De test gebruikt laterale stroom immunoassay-technologie met goud-nanodeeltje-geconjugeerde antilichamen die specifiek binden aan CTX-II- en COMP-biomarkers in urine. Wanneer deze biomarkers aanwezig zijn, vormen ze zichtbare lijnen op de teststrip.",
+          "how-works-2":
+            "De intensiteit van de lijnen correleert met de biomarkerconcentratie, waardoor een semi-kwantitatieve beoordeling van kraakbeenafbraak mogelijk is.",
+          "clinical-significance": "Klinische Betekenis",
+          "early-detection": "Vroege detectie van artrose maakt het mogelijk:",
+          therapy: "Tijdige interventie met fysiotherapie",
+          lifestyle: "Levensstijlaanpassingen om progressie te vertragen",
+          trials:
+            "Mogelijke deelname aan klinische onderzoeken voor nieuwe behandelingen",
+          surgery: "Betere chirurgische resultaten bij vroegtijdige aanpak",
+          intro:
+            "Upload een foto van uw teststrip om te beginnen met analyseren.",
+          analyze: "Analyseren",
+          analyzing: "Analyseren...",
+          result: "Analyse voltooid! Resultaat: Positief",
+          "upload-text": "Sleep uw teststrip afbeelding hierheen",
+          "or-text": "of klik om bestanden te bladeren",
+          "positive-result":
+            "Positief - Biomarkers voor kraakbeenafbraak gedetecteerd",
+          "negative-result": "Negatief - Geen biomarkers gedetecteerd",
+          "invalid-result": "Ongeldig - Herhaal de test alstublieft",
+          "upload-error": "Upload eerst een afbeelding",
+          "video-title": "Hoe de test te gebruiken",
+          "video-description":
+            "Bekijk deze instructievideo voor de juiste testprocedure",
+          "video-scan-note":
+            "Scan de QR-code op uw testkit om toegang te krijgen tot deze video",
+          "ai-title": "KneeMarker Assistent",
+          "ai-name": "KneeMarker AI",
+          "ai-welcome":
+            "Hallo! Ik ben uw KneeMarker-assistent. Ik kan u helpen met:",
+          "ai-help-1": "Het interpreteren van uw testresultaten",
+          "ai-help-2": "Uitleg over hoe de test werkt",
+          "ai-help-3": "Vragen beantwoorden over artrose",
+          "ai-help-4": "Het geven van richtlijnen voor vervolgstappen",
+          "ai-prompt": "Hoe kan ik u vandaag helpen?",
+          "ai-placeholder": "Vraag me over uw test...",
+          "quick-action-1": "Betekenis positieve test",
+          "quick-action-2": "Testopslag",
+          "quick-action-3": "Test hergebruiken?",
+          "positive-interpretation":
+            "Twee lijnen gedetecteerd (T- en C-lijnen). Dit duidt op de aanwezigheid van biomarkers voor kraakbeenafbraak (CTX-II en/of COMP).",
+          "positive-action":
+            "Overleg met uw zorgverlener om de resultaten en mogelijke vervolgstappen voor het beheren van gewrichtsgezondheid te bespreken.",
+          "negative-interpretation":
+            "Alleen de controlelijn (C-lijn) gedetecteerd. Er werden geen significante niveaus van biomarkers voor kraakbeenafbraak gevonden.",
+          "negative-action":
+            "Blijf monitoren zoals aanbevolen door uw zorgverlener. Herhaal de test over 3-6 maanden of als symptomen optreden.",
+          "invalid-interpretation":
+            "Geen controlelijn gedetecteerd. Dit kan komen door:",
+          "invalid-reason-1": "Onvoldoende monstervolume",
+          "invalid-reason-2": "Verlopen testkit",
+          "invalid-reason-3": "Onjuiste testuitvoering",
+          "invalid-action":
+            "Herhaal de test met een vers urinemonster en nieuwe testkit indien beschikbaar.",
+          "share-results": "Resultaten delen",
+          "download-report": "Rapport downloaden",
+        },
+      };
+
+      // DOM Elements
+      const languageSelector = document.getElementById("languageSelector");
+      const uploadArea = document.getElementById("uploadArea");
+      const fileInput = document.getElementById("fileInput");
+      const analyzeBtn = document.getElementById("analyzeBtn");
+      const resultContainer = document.getElementById("resultContainer");
+      const aiAssistantBtn = document.getElementById("ai-assistant-btn");
+      const aiAssistantContainer = document.getElementById(
+        "ai-assistant-container"
+      );
+      const aiCloseBtn = document.getElementById("ai-close-btn");
+      const aiChatBody = document.getElementById("ai-chat-body");
+      const aiUserInput = document.getElementById("ai-user-input");
+      const aiSendBtn = document.getElementById("ai-send-btn");
+      const quickActionBtns = document.querySelectorAll(".quick-action-btn");
+
+      // Initialize language
+      function updateLanguage(lang) {
+        // Update all elements with data-lang attribute
+        document.querySelectorAll("[data-lang]").forEach((el) => {
+          const key = el.getAttribute("data-lang");
+          if (translations[lang] && translations[lang][key]) {
+            if (el.tagName === "INPUT" && el.type === "text") {
+              el.placeholder = translations[lang][key];
+            } else {
+              el.textContent = translations[lang][key];
+            }
+          }
+        });
+
+        // Update time in initial AI message
+        const timeElements = document.querySelectorAll(
+          ".assistant-message small"
+        );
+        timeElements.forEach((el) => {
+          el.textContent = new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        });
+      }
+
+      // Set default language
+      languageSelector.value = "en";
+      updateLanguage("en");
+
+      languageSelector.addEventListener("change", function () {
+        const lang = this.value;
+        updateLanguage(lang);
+      });
+
+      // Upload area functionality
+      uploadArea.addEventListener("click", () => fileInput.click());
+
+      fileInput.addEventListener("change", function () {
+        if (this.files && this.files[0]) {
+          const fileName = this.files[0].name;
+          const fileUrl = URL.createObjectURL(this.files[0]);
+
+          uploadArea.innerHTML = `
+          <button class="clear-upload" onclick="clearUpload()">
+            <i class="fas fa-times"></i>
+          </button>
+          <img src="${fileUrl}" class="img-fluid mb-2" style="max-height: 120px;">
+          <h5>${fileName}</h5>
+          <p class="text-muted">${
+            translations[languageSelector.value]["or-text"]
+          }</p>
+        `;
+        }
+      });
+
+      // Clear upload function
+      window.clearUpload = function () {
+        fileInput.value = "";
+        uploadArea.innerHTML = `
+        <i class="fas fa-cloud-upload-alt fa-3x mb-3" style="color: var(--primary-color);"></i>
+        <h5 data-lang="upload-text">${
+          translations[languageSelector.value]["upload-text"]
+        }</h5>
+        <p class="text-muted" data-lang="or-text">${
+          translations[languageSelector.value]["or-text"]
+        }</p>
+      `;
+        updateLanguage(languageSelector.value);
+      };
+
+      // Drag and drop functionality
+      ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+        uploadArea.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      ["dragenter", "dragover"].forEach((eventName) => {
+        uploadArea.addEventListener(eventName, highlight, false);
+      });
+
+      ["dragleave", "drop"].forEach((eventName) => {
+        uploadArea.addEventListener(eventName, unhighlight, false);
+      });
+
+      function highlight() {
+        uploadArea.style.borderColor = "#4a6fa5";
+        uploadArea.style.backgroundColor = "rgba(74, 111, 165, 0.1)";
+      }
+
+      function unhighlight() {
+        uploadArea.style.borderColor = "#ddd";
+        uploadArea.style.backgroundColor = "";
+      }
+
+      uploadArea.addEventListener("drop", handleDrop, false);
+
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        fileInput.files = files;
+        fileInput.dispatchEvent(new Event("change"));
+      }
+
+      // Analysis function with test strip interpretation
+      analyzeBtn.addEventListener("click", analyzeTestStrip);
+
+      function analyzeTestStrip() {
+        if (!fileInput.files || !fileInput.files[0]) {
+          showAlert(
+            translations[languageSelector.value]["upload-error"],
+            "danger"
+          );
+          return;
+        }
+
+        const fileUrl = URL.createObjectURL(fileInput.files[0]);
+        const lang = languageSelector.value;
+
+        resultContainer.innerHTML = `
+        <div class="d-flex justify-content-center align-items-center">
+          <div class="spinner-border text-primary me-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mb-0" data-lang="analyzing">${translations[lang]["analyzing"]}</p>
+        </div>
+      `;
+
+        // Simulate analysis with actual image processing
+        setTimeout(() => {
+          // Get the uploaded image
+          const img = new Image();
+          img.src = fileUrl;
+
+          img.onload = function () {
+            // Create canvas to analyze the image
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+
+            // Get image data for analysis
+            const imageData = ctx.getImageData(
+              0,
+              0,
+              canvas.width,
+              canvas.height
+            );
+            const data = imageData.data;
+
+            // Simple analysis to detect lines (this is a simplified approach)
+            // In a real app, you would use more sophisticated image processing
+            let result = analyzeTestStripImage(
+              data,
+              canvas.width,
+              canvas.height
+            );
+
+            // Display results
+            displayResults(result, fileUrl, lang);
+          };
+        }, 2000);
+      }
+
+      // Simplified test strip analysis function
+      function analyzeTestStripImage(imageData, width, height) {
+        // This is a simplified approach - in reality you'd use proper image processing
+        // Here we'll simulate analyzing the image for test lines
+
+        // Sample some points where we expect the test and control lines to be
+        const testLineY = Math.floor(height * 0.4);
+        const controlLineY = Math.floor(height * 0.6);
+        const sampleWidth = Math.floor(width * 0.8);
+        const sampleX = Math.floor(width * 0.1);
+
+        // Check for control line (should always be present in valid tests)
+        const controlLinePresent = checkForLine(
+          imageData,
+          width,
+          sampleX,
+          controlLineY,
+          sampleWidth
+        );
+
+        if (!controlLinePresent) {
+          return "invalid"; // No control line = invalid test
+        }
+
+        // Check for test line
+        const testLinePresent = checkForLine(
+          imageData,
+          width,
+          sampleX,
+          testLineY,
+          sampleWidth
+        );
+
+        return testLinePresent ? "positive" : "negative";
+      }
+
+      // Helper function to check for a line at a specific y position
+      function checkForLine(imageData, width, startX, y, sampleWidth) {
+        // Sample points along the expected line position
+        const samplePoints = 10;
+        let darkPoints = 0;
+
+        for (let i = 0; i < samplePoints; i++) {
+          const x = startX + Math.floor((i / samplePoints) * sampleWidth);
+          const pixelIndex = (y * width + x) * 4;
+
+          // Simple check for dark pixels (red lines in test strips)
+          const r = imageData[pixelIndex];
+          const g = imageData[pixelIndex + 1];
+          const b = imageData[pixelIndex + 2];
+
+          // Check if pixel is dark (not white/light)
+          if (r < 200 && g < 200 && b < 200) {
+            darkPoints++;
+          }
+        }
+
+        // If most sampled points are dark, we consider it a line
+        return darkPoints >= samplePoints * 0.7;
+      }
+
+      function displayResults(result, imageUrl, lang) {
+        let resultText, resultClass, interpretation;
+
+        switch (result) {
+          case "positive":
+            resultText = translations[lang]["positive-result"];
+            resultClass = "danger";
+            interpretation = `
+              <p>${translations[lang]["positive-interpretation"]}</p>
+              <div class="alert alert-info mt-2">
+                <strong>${
+                  translations[lang]["recommended-action"] ||
+                  "Recommended Action"
+                }:</strong> 
+                ${translations[lang]["positive-action"]}
+              </div>
+            `;
+            break;
+          case "negative":
+            resultText = translations[lang]["negative-result"];
+            resultClass = "success";
+            interpretation = `
+              <p>${translations[lang]["negative-interpretation"]}</p>
+              <div class="alert alert-info mt-2">
+                <strong>${
+                  translations[lang]["recommended-action"] ||
+                  "Recommended Action"
+                }:</strong> 
+                ${translations[lang]["negative-action"] 
+                  || "Continue monitoring as recommended by your healthcare provider. Retest in 3-6 months or if symptoms develop."}
+              </div>
+            `;
+            break;
+          case "invalid":
+            resultText = translations[lang]["invalid-result"];
+            resultClass = "warning";
+            interpretation = `
+              <p>${translations[lang]["invalid-interpretation"]}</p>
+              <ul>
+                <li>${translations[lang]["invalid-reason-1"]}</li>
+                <li>${translations[lang]["invalid-reason-2"]}</li>
+                <li>${translations[lang]["invalid-reason-3"]}</li>
+              </ul>
+              <div class="alert alert-info mt-2">
+                <strong>${
+                  translations[lang]["recommended-action"] ||
+                  "Recommended Action"
+                }:</strong> 
+                ${translations[lang]["invalid-action"]}
+              </div>
+            `;
+            break;
+        }
+
+        resultContainer.innerHTML = `
+          <div class="test-result">
+            <img src="${imageUrl}" class="test-result-image" alt="Test strip result">
+            <div class="alert alert-${resultClass}">
+              <i class="fas fa-${
+                resultClass === "danger"
+                  ? "exclamation-triangle"
+                  : resultClass === "success"
+                  ? "check-circle"
+                  : "exclamation-circle"
+              } me-2"></i>
+              ${resultText}
+            </div>
+            ${interpretation}
+            <div class="mt-3">
+              <button class="btn btn-outline-primary me-2">
+                <i class="fas fa-share-alt me-1"></i> 
+                ${translations[lang]["share-results"]}
+              </button>
+              <button class="btn btn-outline-secondary">
+                <i class="fas fa-download me-1"></i> 
+                ${translations[lang]["download-report"]}
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      function showAlert(message, type) {
+        resultContainer.innerHTML = `
+        <div class="alert alert-${type}">
+          <i class="fas fa-${
+            type === "danger" ? "exclamation-triangle" : "info-circle"
+          } me-2"></i>
+          ${message}
+        </div>
+      `;
+      }
+
+      // AI Assistant Chat Functionality
+      function toggleChat() {
+        const isVisible = aiAssistantContainer.style.display === "flex";
+        aiAssistantContainer.style.display = isVisible ? "none" : "flex";
+        if (!isVisible) {
+          aiUserInput.focus();
+        }
+      }
+
+      // Set up event listeners for AI chat
+      aiAssistantBtn.addEventListener("click", toggleChat);
+      aiCloseBtn.addEventListener("click", toggleChat);
+
+      // Quick action buttons
+      quickActionBtns.forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const question = this.getAttribute("data-question");
+          aiUserInput.value = question;
+          aiSendBtn.click();
+        });
+      });
+
+      // Send message function
+      aiSendBtn.addEventListener("click", sendMessage);
+      aiUserInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          sendMessage();
+        }
+      });
+
+      async function sendMessage() {
+        const userMessage = aiUserInput.value.trim();
+        if (!userMessage) return;
+
+        // Add user message to chat
+        appendMessage("user", userMessage);
+        aiUserInput.value = "";
+
+        // Show thinking indicator
+        const thinkingElement = appendMessage(
+          "assistant",
+          languageSelector.value === "en" ? "Thinking..." : "Denken...",
+          true
+        );
+
+        try {
+          // Call SheCodes API instead of Google's Generative AI
+          const prompt = `You are KneeMarker AI, a helpful assistant for the KneeMarker test kit. Provide accurate information about test procedures, result interpretation, and general knee health. Be professional yet friendly in your responses. Keep answers concise but thorough. If asked about test accuracy, mention it's 98% accurate when used correctly. For medical advice beyond the test, recommend consulting a healthcare professional. User question: ${userMessage}`;
+          
+          const apiUrl = `https://api.shecodes.io/ai/v1/generate?prompt=${encodeURIComponent(prompt)}&key=${apiKey}`;
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+          
+          const text = data.answer || "Sorry, I couldn't process your request. Please try again.";
+
+          // Remove thinking indicator and add real response
+          aiChatBody.removeChild(thinkingElement);
+          appendMessage("assistant", text);
+        } catch (error) {
+          console.error("Error:", error);
+          aiChatBody.removeChild(thinkingElement);
+          const errorMessage =
+            languageSelector.value === "en"
+              ? "Sorry, I'm having trouble connecting. Please try again later."
+              : "Sorry, ik heb problemen met verbinden. Probeer het later opnieuw.";
+          appendMessage("assistant", errorMessage);
+        }
+      }
+
+      function appendMessage(role, text, isThinking = false) {
+        const messageElement = document.createElement("div");
+
+        if (isThinking) {
+          messageElement.className = "thinking-message";
+          messageElement.textContent = text;
+        } else {
+          messageElement.className = `message ${role}-message`;
+          messageElement.innerHTML = `
+            <div class="d-flex align-items-center mb-1">
+              <strong>${
+                role === "user"
+                  ? languageSelector.value === "en"
+                    ? "You"
+                    : "U"
+                  : translations[languageSelector.value]["ai-name"]
+              }</strong>
+              <small class="text-muted ms-2">${new Date().toLocaleTimeString(
+                [],
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }
+              )}</small>
+            </div>
+            <div>${text}</div>
+          `;
+        }
+
+        aiChatBody.appendChild(messageElement);
+        aiChatBody.scrollTop = aiChatBody.scrollHeight;
+
+        return messageElement;
+      }
+    </script>
+  </body>
+</html>
