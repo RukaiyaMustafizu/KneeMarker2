@@ -24,14 +24,15 @@
       }
       h1 {
         font-weight: bolder;
-       font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-       font-size: 40px;
-       color: rgb(16, 59, 69);
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+        font-size: 40px;
+        color: rgb(16, 59, 69);
       }
 
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-image: url('kneemarker-icon.jpg');
+        background-image: url("kneemarker-icon.jpg");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -40,7 +41,7 @@
         padding: 0;
         min-height: 100vh;
       }
-      
+
       /* Main container */
       .test-container {
         max-width: 800px;
@@ -67,45 +68,44 @@
 
       /* Language toggle */
       .language-toggle {
-        position: absolute;
+        position: fixed;
         top: 1rem;
         right: 1rem;
         z-index: 1000;
       }
 
       /* AI Assistant Button */
-     /* AI Assistant Button */
-#ai-assistant-btn {
-  position: fixed;
-  bottom: 0.5rem;
-  right: 2rem;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: var(--primary-color);
-  color: white;
-  border: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
-  z-index: 1050; /* Ensure it's above other elements */
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+      #ai-assistant-btn {
+        position: fixed;
+        bottom: 0.5rem;
+        right: 2rem;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        z-index: 1050;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-#ai-assistant-btn:hover {
-  background: var(--secondary-color);
-  transform: scale(1.05);
-}
+      #ai-assistant-btn:hover {
+        background: var(--secondary-color);
+        transform: scale(1.05);
+      }
 
-#ai-assistant-btn .badge {
-  position: absolute;
-  top: -20px;
-  right: -20px;
-  background: var(--accent-color);
-  color: white;
-}
+      #ai-assistant-btn .badge {
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        background: var(--accent-color);
+        color: white;
+      }
 
       /* AI Chat Container */
       #ai-assistant-container {
@@ -269,9 +269,24 @@
       .quick-action-btn:hover {
         background: #dee2e6;
       }
-      
+      .video-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        height: 0;
+        overflow: hidden;
+      }
+
+      .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
       #analyzeBtn {
-        background:rgba(128, 0, 128, 0.803);
+        background: rgba(128, 0, 128, 0.803);
         color: white;
         border: none;
         border-radius: 8px;
@@ -280,7 +295,7 @@
         cursor: pointer;
         transition: background 0.2s, transform 0.2s;
       }
-      
+
       #analyzeBtn:hover {
         background: rgb(159, 54, 159);
         transform: scale(1.05);
@@ -345,7 +360,7 @@
         background: #f8f9fa;
         border-radius: 8px;
       }
-      
+
       .video-container {
         position: relative;
         padding-bottom: 56.25%; /* 16:9 aspect ratio */
@@ -378,24 +393,23 @@
     </style>
   </head>
   <body>
-    <div class="container-fluid">
-      <!-- Language Toggle -->
-      <div class="language-toggle">
-        <select
-          id="languageSelector"
-          class="form-select form-select-sm"
-          style="width: auto"
-        >
-          <option value="en">English</option>
-          <option value="nl">Dutch</option>
-        </select>
-      </div>
+    <!-- Language Toggle -->
+    <div class="language-toggle">
+      <select
+        id="languageSelector"
+        class="form-select form-select-sm"
+        style="width: auto"
+      >
+        <option value="en">English</option>
+        <option value="nl">Dutch</option>
+      </select>
+    </div>
 
+    <!-- Main Content Container -->
+    <div class="container-fluid">
       <!-- Main Test Container -->
       <div class="test-container p-4">
-       <h1 class="text-center mb-4" data-lang="title">
-         KneeMarker Test
-       </h1>
+        <h1 class="text-center mb-4" data-lang="title">KneeMarker Test</h1>
 
         <!-- Information Section -->
         <div class="info-section">
@@ -518,106 +532,111 @@
 
         <div id="resultContainer" class="mt-4 text-center"></div>
 
+        <!-- Video Section -->
         <div class="video-section">
-  <h5><i class="fas fa-video me-2"></i> <span data-lang="video-title">Watch more about KneeMarker</span></h5>
-  <p data-lang="video-description">Watch this video for more context</p>
-
-  <div class="video-container" style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
-    <iframe 
-      src="https://www.youtube.com/embed/HTEPBt5i8LM" 
-      title="KneeMarker Video"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen 
-      style="position:absolute; top:0; left:0; width:100%; height:100%;">
-    </iframe>
-  </div>
-
-  <p class="small text-muted" data-lang="video-scan-note">
-    Scan the QR code on your test kit to access this video, & other features.
-  </p>
-</div>
-
-
-      <!-- AI Assistant Floating Button -->
-      <button id="ai-assistant-btn" class="btn">
-        <i class="fas fa-robot"></i>
-        <span class="badge bg-danger rounded-pill">Need Help?
-          <span class="visually-hidden">AI Assistant</span>
-          😄
-        </span>
-      </button>
-
-      <!-- AI Assistant Chat Container -->
-      <div id="ai-assistant-container">
-        <div class="ai-chat-header">
           <h5>
-            <i class="fas fa-robot me-2"></i>
-            <span data-lang="ai-title">KneeMarker Assistant</span>
+            <i class="fas fa-video me-2"></i>
+            <span data-lang="video-title">Watch more about KneeMarker</span>
           </h5>
-          <button class="ai-close-btn" id="ai-close-btn">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
+          <p data-lang="video-description">Watch this video for more context</p>
 
-        <div class="ai-chat-body" id="ai-chat-body">
-          <!-- Messages will appear here -->
-          <div class="message assistant-message">
-            <div class="d-flex align-items-center mb-1">
-              <strong data-lang="ai-name">KneeMarker AI</strong>
-              <small class="text-muted ms-2"></small>
-            </div>
-            <div data-lang="ai-welcome">
-              Hello! I'm your KneeMarker assistant. I can help you with:
-            </div>
-            <ul>
-              <li data-lang="ai-help-1">Interpreting your test results</li>
-              <li data-lang="ai-help-2">Explaining how the test works</li>
-              <li data-lang="ai-help-3">
-                Answering questions about osteoarthritis
-              </li>
-              <li data-lang="ai-help-4">Providing guidance on next steps</li>
-            </ul>
-            <div data-lang="ai-prompt">How can I help you today?</div>
+          <div class="video-container">
+            <iframe
+              src="https://www.youtube.com/embed/HTEPBt5i8LM"
+              title="KneeMarker Video"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
           </div>
 
-          <div class="quick-actions mt-3">
-            <button
-              class="quick-action-btn"
-              data-question="What does a positive test mean?"
-              data-lang="quick-action-1"
-            >
-              Positive test meaning
-            </button>
-            <button
-              class="quick-action-btn"
-              data-question="How should I store my test?"
-              data-lang="quick-action-2"
-            >
-              Test storage
-            </button>
-            <button
-              class="quick-action-btn"
-              data-question="Can I reuse the test?"
-              data-lang="quick-action-3"
-            >
-              Reuse test?
-            </button>
+          <p class="small text-muted" data-lang="video-scan-note">
+            Scan the QR code on your test kit to access this video, & other
+            features.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Assistant Floating Button -->
+    <button id="ai-assistant-btn" class="btn">
+      <i class="fas fa-robot"></i>
+      <span class="badge bg-danger rounded-pill"
+        >Need Help?
+        <span class="visually-hidden">AI Assistant</span>
+        😄
+      </span>
+    </button>
+
+    <!-- AI Assistant Chat Container -->
+    <div id="ai-assistant-container">
+      <div class="ai-chat-header">
+        <h5>
+          <i class="fas fa-robot me-2"></i>
+          <span data-lang="ai-title">KneeMarker Assistant</span>
+        </h5>
+        <button class="ai-close-btn" id="ai-close-btn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <!-- Messages will appear here -->
+        <div class="message assistant-message">
+          <div class="d-flex align-items-center mb-1">
+            <strong data-lang="ai-name">KneeMarker AI</strong>
+            <small class="text-muted ms-2"></small>
           </div>
+          <div data-lang="ai-welcome">
+            Hello! I'm your KneeMarker assistant. I can help you with:
+          </div>
+          <ul>
+            <li data-lang="ai-help-1">Interpreting your test results</li>
+            <li data-lang="ai-help-2">Explaining how the test works</li>
+            <li data-lang="ai-help-3">
+              Answering questions about osteoarthritis
+            </li>
+            <li data-lang="ai-help-4">Providing guidance on next steps</li>
+          </ul>
+          <div data-lang="ai-prompt">How can I help you today?</div>
         </div>
 
-        <div class="ai-chat-input">
-          <input
-            type="text"
-            id="ai-user-input"
-            placeholder="Ask me about your test..."
-            autocomplete="off"
-            data-lang="ai-placeholder"
-          />
-          <button class="ai-send-btn" id="ai-send-btn">
-            <i class="fas fa-paper-plane"></i>
+        <div class="quick-actions mt-3">
+          <button
+            class="quick-action-btn"
+            data-question="What does a positive test mean?"
+            data-lang="quick-action-1"
+          >
+            Positive test meaning
+          </button>
+          <button
+            class="quick-action-btn"
+            data-question="How should I store my test?"
+            data-lang="quick-action-2"
+          >
+            Test storage
+          </button>
+          <button
+            class="quick-action-btn"
+            data-question="Can I reuse the test?"
+            data-lang="quick-action-3"
+          >
+            Reuse test?
           </button>
         </div>
+      </div>
+
+      <div class="ai-chat-input">
+        <input
+          type="text"
+          id="ai-user-input"
+          placeholder="Ask me about your test..."
+          autocomplete="off"
+          data-lang="ai-placeholder"
+        />
+        <button class="ai-send-btn" id="ai-send-btn">
+          <i class="fas fa-paper-plane"></i>
+        </button>
       </div>
     </div>
 
@@ -627,7 +646,7 @@
     <script>
       // SheCodes API Key
       const apiKey = "tf315a00255a026o44c386706557b731";
-      
+
       // Enhanced Translations with complete Dutch support
       const translations = {
         en: {
@@ -1038,8 +1057,10 @@
                   translations[lang]["recommended-action"] ||
                   "Recommended Action"
                 }:</strong> 
-                ${translations[lang]["negative-action"] 
-                  || "Continue monitoring as recommended by your healthcare provider. Retest in 3-6 months or if symptoms develop."}
+                ${
+                  translations[lang]["negative-action"] ||
+                  "Continue monitoring as recommended by your healthcare provider. Retest in 3-6 months or if symptoms develop."
+                }
               </div>
             `;
             break;
@@ -1151,12 +1172,16 @@
         try {
           // Call SheCodes API instead of Google's Generative AI
           const prompt = `You are KneeMarker AI, a helpful assistant for the KneeMarker test kit. Provide accurate information about test procedures, result interpretation, and general knee health. Be professional yet friendly in your responses. Keep answers concise but thorough. If asked about test accuracy, mention it's 98% accurate when used correctly. For medical advice beyond the test, recommend consulting a healthcare professional. User question: ${userMessage}`;
-          
-          const apiUrl = `https://api.shecodes.io/ai/v1/generate?prompt=${encodeURIComponent(prompt)}&key=${apiKey}`;
+
+          const apiUrl = `https://api.shecodes.io/ai/v1/generate?prompt=${encodeURIComponent(
+            prompt
+          )}&key=${apiKey}`;
           const response = await fetch(apiUrl);
           const data = await response.json();
-          
-          const text = data.answer || "Sorry, I couldn't process your request. Please try again.";
+
+          const text =
+            data.answer ||
+            "Sorry, I couldn't process your request. Please try again.";
 
           // Remove thinking indicator and add real response
           aiChatBody.removeChild(thinkingElement);
