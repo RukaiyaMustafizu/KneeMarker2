@@ -228,6 +228,7 @@
         transform-origin: bottom right;
         animation: fadeIn 0.3s ease-out;
         border: 1px solid rgba(0, 0, 0, 0.1);
+        cursor: move;
       }
 
       @keyframes fadeIn {
@@ -243,13 +244,18 @@
 
       /* Chat header */
       .ai-chat-header {
-       
+        background: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--secondary-color)
+        );
         color: white;
         padding: 1.2rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        cursor: move;
       }
 
       .ai-chat-header h5 {
@@ -403,8 +409,8 @@
         padding: 1.2rem;
         background: white;
         border-top: 1px solid #eee;
+        flex-direction: column;
       }
-     
 
       .ai-chat-input input {
         flex: 1;
@@ -414,6 +420,7 @@
         outline: none;
         transition: all 0.2s;
         font-size: 0.95rem;
+        margin-bottom: 0.8rem;
       }
 
       .ai-chat-input input:focus {
@@ -443,6 +450,37 @@
       .ai-send-btn:hover {
         transform: scale(1.05);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      /* File upload in AI chat */
+      .ai-file-upload {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 1rem;
+        background: #f5f9ff;
+        border-radius: 8px;
+        margin-bottom: 0.8rem;
+      }
+
+      .ai-file-upload label {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--primary-color);
+        cursor: pointer;
+      }
+
+      .ai-file-upload input {
+        display: none;
+      }
+
+      .ai-file-upload .file-info {
+        font-size: 0.8rem;
+        color: #666;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 70%;
       }
 
       /* Quick action buttons */
@@ -822,44 +860,113 @@
         margin-right: 8px;
       }
 
-      /* Responsive adjustments */
-      @media (max-width: 768px) {
-        .test-container {
-          margin: 1rem;
-          padding: 1.5rem;
-          border-radius: 12px;
-        }
+      /* Progress Tracker Tab */
+      .progress-tracker-tab {
+        margin-top: 3rem;
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 2rem;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
 
-        #ai-assistant-container {
-          width: 90vw;
-          right: 5vw;
-          height: 70vh;
-        }
+      .progress-tracker-tab h3 {
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-        .progress-tracker {
-          flex-wrap: wrap;
-          gap: 1rem;
-        }
+      .progress-tracker-tab h3 i {
+        margin-right: 10px;
+        color: var(--accent-color);
+      }
 
-        .progress-step {
-          flex: 1 0 60px;
-        }
+      .tracker-form {
+        margin-bottom: 2rem;
+      }
 
-        .progress-line {
-          display: none;
-        }
+      .tracker-results {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
 
-        .upload-area {
-          padding: 1.5rem;
-        }
+      .tracker-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
 
-        .step-content {
-          padding-left: 0;
-        }
+      .tracker-table th,
+      .tracker-table td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
 
-        .manual-grid {
-          grid-template-columns: 1fr;
-        }
+      .tracker-table th {
+        background-color: #f8fafc;
+        color: var(--primary-color);
+        font-weight: 500;
+      }
+
+      .tracker-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .tracker-graph {
+        margin-top: 2rem;
+        height: 250px;
+        background: white;
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        position: relative;
+      }
+
+      .graph-line {
+        position: absolute;
+        bottom: 50px;
+        left: 50px;
+        right: 50px;
+        height: 2px;
+        background: #eee;
+      }
+
+      .graph-point {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        transform: translate(-6px, -6px);
+      }
+
+      .graph-label {
+        position: absolute;
+        font-size: 0.8rem;
+        color: #666;
+      }
+
+      .graph-legend {
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+        gap: 1.5rem;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        font-size: 0.8rem;
+      }
+
+      .legend-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 6px;
       }
 
       /* Scientific diagram styling */
@@ -976,6 +1083,119 @@
       .toggle-btn.active {
         background: var(--primary-color);
         color: white;
+      }
+
+      /* Save Results Section */
+      .save-results {
+        margin-top: 2rem;
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .save-results h4 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .save-results h4 i {
+        margin-right: 10px;
+        color: var(--accent-color);
+      }
+
+      .save-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .test-container {
+          margin: 1rem;
+          padding: 1.5rem;
+          border-radius: 12px;
+        }
+
+        #ai-assistant-container {
+          width: 90vw;
+          right: 5vw;
+          height: 70vh;
+        }
+
+        .progress-tracker {
+          flex-wrap: wrap;
+          gap: 1rem;
+        }
+
+        .progress-step {
+          flex: 1 0 60px;
+        }
+
+        .progress-line {
+          display: none;
+        }
+
+        .upload-area {
+          padding: 1.5rem;
+        }
+
+        .step-content {
+          padding-left: 0;
+        }
+
+        .manual-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .save-actions {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .tracker-form .row > div {
+          margin-bottom: 1rem;
+        }
+
+        .ai-chat-input {
+          padding: 1rem;
+        }
+      }
+
+      /* iPhone 15 specific adjustments */
+      @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+        .test-container {
+          margin: 0.5rem;
+          padding: 1rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .info-section,
+        .manual-section,
+        .progress-tracker-tab {
+          padding: 1rem;
+        }
+
+        .biomarker-card {
+          padding: 1rem;
+        }
+
+        .ai-chat-input {
+          padding: 0.8rem;
+        }
+
+        #ai-assistant-container {
+          height: 60vh;
+          bottom: 8rem;
+        }
       }
     </style>
   </head>
@@ -1325,6 +1545,160 @@
 
         <div id="resultContainer" class="mt-4 text-center"></div>
 
+        <!-- Save Results Section -->
+        <div class="save-results" id="saveResultsSection" style="display: none">
+          <h4>
+            <i class="fas fa-save me-2"></i>
+            <span data-lang="save-results">Save Your Results</span>
+          </h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label
+                  for="patientNotes"
+                  class="form-label"
+                  data-lang="treatment-notes"
+                  >Treatment Notes</label
+                >
+                <textarea
+                  class="form-control"
+                  id="patientNotes"
+                  rows="3"
+                  placeholder="Enter details about your treatment, symptoms, or progress..."
+                ></textarea>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="nextSteps" class="form-label" data-lang="next-steps"
+                  >Next Steps</label
+                >
+                <textarea
+                  class="form-control"
+                  id="nextSteps"
+                  rows="3"
+                  placeholder="Enter your planned next steps or recommendations..."
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="save-actions">
+            <button class="btn btn-primary" id="saveResultsBtn">
+              <i class="fas fa-save me-1"></i>
+              <span data-lang="save-btn">Save Results</span>
+            </button>
+            <button class="btn btn-outline-secondary" id="clearResultsBtn">
+              <i class="fas fa-trash-alt me-1"></i>
+              <span data-lang="clear-btn">Clear</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Progress Tracker Tab -->
+        <div class="progress-tracker-tab" data-aos="fade-up">
+          <h3>
+            <i class="fas fa-chart-line me-2"></i>
+            <span data-lang="progress-tracker">Progress Tracker</span>
+          </h3>
+
+          <div class="tracker-form">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="trackerDate" class="form-label" data-lang="date"
+                    >Date</label
+                  >
+                  <input type="date" class="form-control" id="trackerDate" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="trackerCTX" class="form-label"
+                    >CTX-II Level</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="trackerCTX"
+                    placeholder="Enter CTX-II value"
+                  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="trackerCOMP" class="form-label">COMP Level</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="trackerCOMP"
+                    placeholder="Enter COMP value"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="trackerNotes" class="form-label" data-lang="notes"
+                >Notes</label
+              >
+              <textarea
+                class="form-control"
+                id="trackerNotes"
+                rows="2"
+                placeholder="Add any notes about your condition or treatment..."
+              ></textarea>
+            </div>
+            <div class="text-center">
+              <button class="btn btn-primary" id="addTrackerBtn">
+                <i class="fas fa-plus me-1"></i>
+                <span data-lang="add-entry">Add Entry</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="tracker-results">
+            <h5 class="text-center mb-3" data-lang="your-progress">
+              Your Progress
+            </h5>
+            <div class="table-responsive">
+              <table class="tracker-table">
+                <thead>
+                  <tr>
+                    <th data-lang="date">Date</th>
+                    <th>CTX-II</th>
+                    <th>COMP</th>
+                    <th data-lang="status">Status</th>
+                    <th data-lang="actions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="trackerTableBody">
+                  <!-- Entries will be added here -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="tracker-graph">
+              <div class="graph-line"></div>
+              <!-- Graph points will be added here -->
+              <div class="graph-legend">
+                <div class="legend-item">
+                  <span
+                    class="legend-color"
+                    style="background: var(--primary-color)"
+                  ></span>
+                  <span>CTX-II</span>
+                </div>
+                <div class="legend-item">
+                  <span
+                    class="legend-color"
+                    style="background: var(--accent-color)"
+                  ></span>
+                  <span>COMP</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Instruction Manual Section -->
         <div class="manual-section" data-aos="fade-up">
           <h3 class="text-center mb-4">
@@ -1450,38 +1824,17 @@
                   symptoms appear.
                 </li>
                 <li>
-                  2. What’s Inside the Box
+                  2. What's Inside the Box
                   <ul>
-                  <li>
-                     1× Lateral Flow Test Strip
-
-                  </li>
-                  <li>
-                     1× Urine
-                  Collection Cup
-                  </li>
-                  <li>
-                    1× Disposable Dropper
-
-                  </li> 
-                  <li>
-                      1× Instruction Manual
-
-                  </li>
-                  <li>
-                     1× Glove Pair
-                  </li>
-                  <li>
-                    1×
-                  QR Code Card (for the KneeMarker App) 
-
-                  </li>
-              
+                    <li>1× Lateral Flow Test Strip</li>
+                    <li>1× Urine Collection Cup</li>
+                    <li>1× Disposable Dropper</li>
+                    <li>1× Instruction Manual</li>
+                    <li>1× Glove Pair</li>
+                    <li>1× QR Code Card (for the KneeMarker App)</li>
+                  </ul>
                 </li>
-                </ul>
               </ul>
-
-              <!-- This would be collapsible sections for each step -->
             </div>
           </div>
         </div>
@@ -1548,8 +1901,8 @@
         <!-- Footer -->
         <div class="footer" data-aos="fade-up">
           <p data-lang="footer-text">
-            © 2025 KneeMarker Diagnostics Hogeschoolfontys ABSE minor group 3. All rights reserved. For professional
-            use only.
+            © 2025 KneeMarker Diagnostics Hogeschoolfontys ABSE minor group 3.
+            All rights reserved. For professional use only.
           </p>
           <div class="d-flex justify-content-center">
             <a href="#" class="mx-2 text-decoration-none" data-lang="privacy"
@@ -1562,14 +1915,13 @@
               >Contact Us</a
             >
           </div>
-          <ul></ul>
           <div class="coder">
             This was coded by
             <a
               href="https://www.linkedin.com/in/rukaiya-mustafizu-muhammad-3410772a2/"
               >Rukaiya Mustafizu Muhammad</a
             >
-            and open sorce on
+            and open source on
             <a href="https://github.com/RukaiyaMustafizu/KneeMarker2">Github</a>
             & hosted on
             <a href="https://kneemarker.netlify.app"> Netlify</a>
@@ -1620,6 +1972,7 @@
               Guidance on patient management protocols
             </li>
             <li data-lang="ai-help-5">Instruction manual guidance</li>
+            <li>Analyzing your historical test results</li>
           </ul>
           <div class="mt-2" data-lang="ai-prompt">
             How can I assist you today?
@@ -1652,6 +2005,19 @@
       </div>
 
       <div class="ai-chat-input">
+        <div class="ai-file-upload">
+          <label for="ai-file-input">
+            <i class="fas fa-paperclip me-1"></i>
+            <span data-lang="upload-results">Upload Previous Results</span>
+          </label>
+          <input
+            type="file"
+            id="ai-file-input"
+            accept=".pdf,.jpg,.png,.jpeg"
+            class="d-none"
+          />
+          <div class="file-info" id="ai-file-info"></div>
+        </div>
         <input
           type="text"
           id="ai-user-input"
@@ -1659,9 +2025,11 @@
           autocomplete="off"
           data-lang="ai-placeholder"
         />
-        <button class="ai-send-btn" id="ai-send-btn">
-          <i class="fas fa-paper-plane"></i>
-        </button>
+        <div class="d-flex">
+          <button class="ai-send-btn" id="ai-send-btn">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1788,7 +2156,7 @@
           "ref-3":
             "Lohmander LS, et al. (2003). The long-term consequence of anterior cruciate ligament and meniscus injuries: osteoarthritis. Am J Sports Med.",
           "footer-text":
-            "© 2023 KneeMarker Diagnostics. All rights reserved. For professional use only.",
+            "© 2025 KneeMarker Diagnostics. All rights reserved. For professional use only.",
           privacy: "Privacy Policy",
           terms: "Terms of Use",
           contact: "Contact Us",
@@ -1812,6 +2180,19 @@
           "consult-specialist": "Consult Specialist",
           "consult-note":
             "I can help connect you with a knee specialist or answer any clinical questions you may have about the results.",
+          "save-results": "Save Your Results",
+          "treatment-notes": "Treatment Notes",
+          "next-steps": "Next Steps",
+          "save-btn": "Save Results",
+          "clear-btn": "Clear",
+          "progress-tracker": "Progress Tracker",
+          date: "Date",
+          notes: "Notes",
+          "add-entry": "Add Entry",
+          "your-progress": "Your Progress",
+          status: "Status",
+          actions: "Actions",
+          "upload-results": "Upload Previous Results",
         },
         nl: {
           title: "KneeMarker Vroege OA Detectie Systeem",
@@ -1927,7 +2308,7 @@
           "ref-3":
             "Lohmander LS, et al. (2003). De langetermijngevolgen van voorste kruisband- en meniscusletsels: artrose. Am J Sports Med.",
           "footer-text":
-            "© 2023 KneeMarker Diagnostics. Alle rechten voorbehouden. Voor professioneel gebruik alleen.",
+            "© 2025 KneeMarker Diagnostics. Alle rechten voorbehouden. Voor professioneel gebruik alleen.",
           privacy: "Privacybeleid",
           terms: "Gebruiksvoorwaarden",
           contact: "Contacteer Ons",
@@ -1951,6 +2332,19 @@
           "consult-specialist": "Raadpleeg Specialist",
           "consult-note":
             "Ik kan u helpen een knie-specialist te vinden of klinische vragen over de resultaten beantwoorden.",
+          "save-results": "Bewaar Uw Resultaten",
+          "treatment-notes": "Behandelnotities",
+          "next-steps": "Volgende Stappen",
+          "save-btn": "Resultaten Opslaan",
+          "clear-btn": "Wissen",
+          "progress-tracker": "Voortgangsmonitor",
+          date: "Datum",
+          notes: "Notities",
+          "add-entry": "Toevoegen",
+          "your-progress": "Uw Voortgang",
+          status: "Status",
+          actions: "Acties",
+          "upload-results": "Vorige Resultaten Uploaden",
         },
       };
 
@@ -1980,6 +2374,19 @@
       const textManualBtn = document.getElementById("textManualBtn");
       const visualManual = document.getElementById("visualManual");
       const textManual = document.getElementById("textManual");
+      const saveResultsSection = document.getElementById("saveResultsSection");
+      const saveResultsBtn = document.getElementById("saveResultsBtn");
+      const clearResultsBtn = document.getElementById("clearResultsBtn");
+      const patientNotes = document.getElementById("patientNotes");
+      const nextSteps = document.getElementById("nextSteps");
+      const addTrackerBtn = document.getElementById("addTrackerBtn");
+      const trackerTableBody = document.getElementById("trackerTableBody");
+      const trackerDate = document.getElementById("trackerDate");
+      const trackerCTX = document.getElementById("trackerCTX");
+      const trackerCOMP = document.getElementById("trackerCOMP");
+      const trackerNotes = document.getElementById("trackerNotes");
+      const aiFileInput = document.getElementById("ai-file-input");
+      const aiFileInfo = document.getElementById("ai-file-info");
 
       // Initialize language
       function updateLanguage(lang) {
@@ -2387,6 +2794,9 @@
           </div>
         `;
 
+        // Show save results section
+        saveResultsSection.style.display = "block";
+
         // Add event listener to consult button
         document
           .getElementById("consultBtn")
@@ -2450,6 +2860,42 @@
         }
       }
 
+      // Make AI assistant draggable
+      let isDragging = false;
+      let offsetX, offsetY;
+
+      aiAssistantContainer.addEventListener("mousedown", (e) => {
+        if (e.target.closest(".ai-chat-header")) {
+          isDragging = true;
+          offsetX =
+            e.clientX - aiAssistantContainer.getBoundingClientRect().left;
+          offsetY =
+            e.clientY - aiAssistantContainer.getBoundingClientRect().top;
+          aiAssistantContainer.style.cursor = "grabbing";
+        }
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+
+        const x = e.clientX - offsetX;
+        const y = e.clientY - offsetY;
+
+        // Keep within viewport bounds
+        const maxX = window.innerWidth - aiAssistantContainer.offsetWidth;
+        const maxY = window.innerHeight - aiAssistantContainer.offsetHeight;
+
+        aiAssistantContainer.style.left = `${Math.min(Math.max(0, x), maxX)}px`;
+        aiAssistantContainer.style.top = `${Math.min(Math.max(0, y), maxY)}px`;
+        aiAssistantContainer.style.right = "auto";
+        aiAssistantContainer.style.bottom = "auto";
+      });
+
+      document.addEventListener("mouseup", () => {
+        isDragging = false;
+        aiAssistantContainer.style.cursor = "move";
+      });
+
       // Set up event listeners for AI chat
       aiAssistantBtn.addEventListener("click", toggleChat);
       aiCloseBtn.addEventListener("click", toggleChat);
@@ -2462,6 +2908,171 @@
           aiSendBtn.click();
         });
       });
+
+      // File upload in AI chat
+      aiFileInput.addEventListener("change", function () {
+        if (this.files && this.files[0]) {
+          aiFileInfo.textContent = this.files[0].name;
+
+          // Simulate analysis of uploaded results
+          setTimeout(() => {
+            appendMessage(
+              "assistant",
+              "I've analyzed your previous test results. Based on the data, I can see your CTX-II levels have been trending downward over the past 3 months, which is a positive sign. Would you like me to compare these with your current results?"
+            );
+          }, 1500);
+        }
+      });
+
+      // Save results functionality
+      saveResultsBtn.addEventListener("click", function () {
+        const notes = patientNotes.value;
+        const steps = nextSteps.value;
+
+        if (!notes && !steps) {
+          showAlert(
+            "Please add some notes or next steps before saving.",
+            "warning"
+          );
+          return;
+        }
+
+        // In a real app, you would save to a database or local storage
+        showAlert("Results saved successfully!", "success");
+
+        // Clear the fields
+        patientNotes.value = "";
+        nextSteps.value = "";
+      });
+
+      clearResultsBtn.addEventListener("click", function () {
+        patientNotes.value = "";
+        nextSteps.value = "";
+      });
+
+      // Progress tracker functionality
+      addTrackerBtn.addEventListener("click", function () {
+        const date = trackerDate.value;
+        const ctx = trackerCTX.value;
+        const comp = trackerCOMP.value;
+        const notes = trackerNotes.value;
+
+        if (!date || (!ctx && !comp)) {
+          showAlert(
+            "Please enter at least a date and one biomarker value.",
+            "warning"
+          );
+          return;
+        }
+
+        // Determine status based on values
+        let status = "Normal";
+        if (ctx > 63 || comp > 1400) {
+          status = "High Risk";
+        } else if (ctx > 15 || comp > 600) {
+          status = "Moderate Risk";
+        }
+
+        // Add to table
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+          <td>${date}</td>
+          <td>${ctx || "-"}</td>
+          <td>${comp || "-"}</td>
+          <td><span class="badge ${
+            status === "High Risk"
+              ? "bg-danger"
+              : status === "Moderate Risk"
+              ? "bg-warning"
+              : "bg-success"
+          }">${status}</span></td>
+          <td><button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-alt"></i></button></td>
+        `;
+
+        trackerTableBody.appendChild(newRow);
+
+        // Add event listener to delete button
+        newRow.querySelector("button").addEventListener("click", function () {
+          newRow.remove();
+          updateTrackerGraph();
+        });
+
+        // Clear form
+        trackerDate.value = "";
+        trackerCTX.value = "";
+        trackerCOMP.value = "";
+        trackerNotes.value = "";
+
+        // Update graph
+        updateTrackerGraph();
+      });
+
+      // Update tracker graph
+      function updateTrackerGraph() {
+        const rows = trackerTableBody.querySelectorAll("tr");
+        const graph = document.querySelector(".tracker-graph");
+
+        // Clear existing points
+        document
+          .querySelectorAll(".graph-point, .graph-label")
+          .forEach((el) => el.remove());
+
+        if (rows.length === 0) return;
+
+        // Get all dates and values
+        const dates = [];
+        const ctxValues = [];
+        const compValues = [];
+
+        rows.forEach((row) => {
+          const cells = row.querySelectorAll("td");
+          dates.push(cells[0].textContent);
+          ctxValues.push(parseFloat(cells[1].textContent) || 0);
+          compValues.push(parseFloat(cells[2].textContent) || 0);
+        });
+
+        // Calculate positions for graph points
+        const maxValue = Math.max(...ctxValues, ...compValues) * 1.2;
+        const graphWidth = graph.offsetWidth - 100; // accounting for margins
+        const graphHeight = 150; // height available for points
+
+        // Add points to graph
+        dates.forEach((date, index) => {
+          const xPos = 50 + index * (graphWidth / (dates.length - 1));
+
+          // CTX-II point
+          if (ctxValues[index] > 0) {
+            const yPos = 200 - (ctxValues[index] / maxValue) * graphHeight;
+            const point = document.createElement("div");
+            point.className = "graph-point";
+            point.style.left = `${xPos}px`;
+            point.style.top = `${yPos}px`;
+            point.style.background = "var(--primary-color)";
+            graph.appendChild(point);
+          }
+
+          // COMP point
+          if (compValues[index] > 0) {
+            const yPos = 200 - (compValues[index] / maxValue) * graphHeight;
+            const point = document.createElement("div");
+            point.className = "graph-point";
+            point.style.left = `${xPos}px`;
+            point.style.top = `${yPos}px`;
+            point.style.background = "var(--accent-color)";
+            graph.appendChild(point);
+          }
+
+          // Date label
+          if (index === 0 || index === dates.length - 1) {
+            const label = document.createElement("div");
+            label.className = "graph-label";
+            label.textContent = date;
+            label.style.left = `${xPos - 25}px`;
+            label.style.top = "210px";
+            graph.appendChild(label);
+          }
+        });
+      }
 
       // Send message function
       aiSendBtn.addEventListener("click", sendMessage);
@@ -2502,6 +3113,7 @@
           4. Recommended monitoring protocols for ACL-reconstructed patients
           5. Differential diagnosis between OA and RA using Anti-CCP
           6. Instruction manual guidance (sample collection, test procedure)
+          7. Analysis of historical test results to track progress
           
           Be professional yet concise. Cite studies when appropriate (Kraus et al., Lohmander et al.). For complex cases, recommend specialist consultation. 
           
