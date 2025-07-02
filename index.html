@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KneeMarker Pro - Advanced Osteoarthritis Detection</title>
+    <title>KneeMarker Pro - Advanced PTOA Detection System</title>
     <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -16,6 +16,8 @@
     />
     <!-- AOS Animation Library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
       :root {
         --primary-color: #166088;
@@ -28,6 +30,7 @@
         --success-green: #2e8b57;
         --warning-orange: #ff8c00;
         --danger-red: #d62828;
+        --neopterin-purple: #8a2be2;
       }
 
       @font-face {
@@ -244,7 +247,11 @@
 
       /* Chat header */
       .ai-chat-header {
-       
+        background: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--secondary-color)
+        );
         color: white;
         padding: 1.2rem;
         display: flex;
@@ -259,6 +266,7 @@
         font-weight: 600;
         display: flex;
         align-items: center;
+        color: rgb(198, 242, 246);
       }
 
       .ai-chat-header h5 i {
@@ -268,7 +276,7 @@
       .ai-close-btn {
         background: rgba(255, 255, 255, 0.2);
         border: none;
-        color: rgb(8, 8, 8);
+        color: white;
         width: 32px;
         height: 32px;
         border-radius: 50%;
@@ -855,6 +863,15 @@
         color: var(--accent-color);
         margin-right: 8px;
       }
+      .scientific-diagram {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+      }
 
       /* Progress Tracker Tab */
       .progress-tracker-tab {
@@ -909,70 +926,6 @@
 
       .tracker-table tr:last-child td {
         border-bottom: none;
-      }
-
-      .tracker-graph {
-        margin-top: 2rem;
-        height: 250px;
-        background: white;
-        border-radius: 8px;
-        padding: 1rem;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        position: relative;
-      }
-
-      .graph-line {
-        position: absolute;
-        bottom: 50px;
-        left: 50px;
-        right: 50px;
-        height: 2px;
-        background: #eee;
-      }
-
-      .graph-point {
-        position: absolute;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: var(--primary-color);
-        transform: translate(-6px, -6px);
-      }
-
-      .graph-label {
-        position: absolute;
-        font-size: 0.8rem;
-        color: #666;
-      }
-
-      .graph-legend {
-        display: flex;
-        justify-content: center;
-        margin-top: 1rem;
-        gap: 1.5rem;
-      }
-
-      .legend-item {
-        display: flex;
-        align-items: center;
-        font-size: 0.8rem;
-      }
-
-      .legend-color {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        margin-right: 6px;
-      }
-
-      /* Scientific diagram styling */
-      .scientific-diagram {
-        width: 100%;
-        max-width: 600px;
-        margin: 1.5rem auto;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(0, 0, 0, 0.05);
       }
 
       /* References section */
@@ -1110,12 +1063,100 @@
         margin-top: 1rem;
       }
 
+      /* Test strip visualization */
+      .test-strip-visual {
+        width: 100%;
+        max-width: 300px;
+        margin: 1rem auto;
+        position: relative;
+        height: 60px;
+        background: #f5f5f5;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .test-line {
+        position: absolute;
+        height: 3px;
+        width: 80%;
+        left: 10%;
+        background: var(--primary-color);
+      }
+
+      .control-line {
+        position: absolute;
+        height: 3px;
+        width: 80%;
+        left: 10%;
+        background: var(--primary-color);
+      }
+
+      .test-line-ctx {
+        top: 20px;
+        background: var(--primary-color);
+      }
+
+      .test-line-comp {
+        top: 30px;
+        background: var(--secondary-color);
+      }
+
+      .test-line-neopterin {
+        top: 40px;
+        background: var(--neopterin-purple);
+      }
+
+      .control-line {
+        top: 50px;
+      }
+
+      /* Legend for test strip */
+      .test-strip-legend {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        font-size: 0.8rem;
+      }
+
+      .legend-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+        margin-right: 6px;
+      }
+
+      /* Chart container */
+      .chart-container {
+        position: relative;
+        height: 250px;
+        margin-top: 1rem;
+      }
+      .diagram-container {
+        max-width: 100%;
+        overflow: hidden;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
       /* Responsive adjustments */
       @media (max-width: 768px) {
         .test-container {
           margin: 1rem;
           padding: 1.5rem;
           border-radius: 12px;
+        }
+        @media (max-width: 768px) {
+          .scientific-diagram {
+            max-width: 100%;
+            max-height: 300px;
+          }
         }
 
         #ai-assistant-container {
@@ -1220,9 +1261,9 @@
             class="mb-3"
             style="max-height: 60px"
           />
-          <h1 data-lang="title">KneeMarker Early OA Detection System</h1>
+          <h1 data-lang="title">KneeMarker PTOA Monitoring System</h1>
           <p class="lead" data-lang="subtitle">
-            Revolutionizing Post-ACL Osteoarthritis Monitoring
+            Early Detection of Post-Traumatic Osteoarthritis After ACL Injury
           </p>
         </div>
 
@@ -1252,10 +1293,10 @@
             <span data-lang="about-test">About the KneeMarker Test</span>
           </h3>
           <p data-lang="test-description">
-            The KneeMarker test is an innovative point-of-care lateral flow
-            immunoassay (LFIA) designed for early detection of post-traumatic
-            osteoarthritis (PTOA) in ACL-reconstructed patients. Our test
-            measures three key biomarkers:
+            The KneeMarker is a lateral flow immunoassay (LFIA) designed for
+            early detection of post-traumatic osteoarthritis (PTOA) in
+            ACL-reconstructed patients. Our test detects three key biomarkers in
+            urine:
           </p>
 
           <div class="row mt-3">
@@ -1266,8 +1307,8 @@
                 </div>
                 <h4>CTX-II</h4>
                 <p data-lang="ctx-description">
-                  C-telopeptide of type II collagen - a specific marker for
-                  cartilage degradation
+                  C-telopeptide of type II collagen - indicates cartilage
+                  breakdown
                 </p>
               </div>
             </div>
@@ -1278,8 +1319,7 @@
                 </div>
                 <h4>COMP</h4>
                 <p data-lang="comp-description">
-                  Cartilage Oligomeric Matrix Protein - indicates cartilage
-                  turnover and structural integrity
+                  Cartilage Oligomeric Matrix Protein - shows cartilage turnover
                 </p>
               </div>
             </div>
@@ -1288,10 +1328,9 @@
                 <div class="card-icon">
                   <i class="fas fa-virus"></i>
                 </div>
-                <h4>Anti-CCP</h4>
-                <p data-lang="ccp-description">
-                  Differentiates osteoarthritis from rheumatoid arthritis with
-                  98% specificity
+                <h4>Neopterin</h4>
+                <p data-lang="neopterin-description">
+                  Differentiates OA from rheumatoid arthritis (RA)
                 </p>
               </div>
             </div>
@@ -1316,24 +1355,60 @@
                 data-bs-parent="#infoAccordion"
               >
                 <div class="accordion-body">
-                  <img
-                    src="KneeMarker LFIA test mechanism.png"
-                    alt="LFIA Mechanism"
-                    class="scientific-diagram mb-3"
-                  />
+                  <div class="diagram-container">
+                    <img
+                      src="KneeMarker LFIA test mechanism.png"
+                      alt="LFIA Mechanism"
+                      class="scientific-diagram mb-3"
+                    />
+                  </div>
                   <p data-lang="how-works-1">
-                    The test utilizes gold nanoparticle-conjugated antibodies in
-                    a lateral flow immunoassay format. When urine is applied,
-                    biomarkers (CTX-II and COMP) bind to specific antibodies,
-                    forming visible complexes at test lines. The anti-CCP strip
-                    detects rheumatoid arthritis antibodies separately.
+                    The test uses gold nanoparticle-conjugated antibodies in a
+                    lateral flow immunoassay format. When urine is applied,
+                    biomarkers (CTX-II, COMP, and Neopterin) bind to specific
+                    antibodies, forming visible lines if present.
                   </p>
                   <p data-lang="how-works-2">
-                    Our proprietary algorithm analyzes line intensity to provide
-                    semi-quantitative results with 98% clinical accuracy
-                    compared to ELISA standards. The test requires no special
-                    storage or sample processing.
+                    The test provides qualitative results (positive/negative)
+                    with 95% clinical accuracy compared to ELISA standards. No
+                    special storage or sample processing is required.
                   </p>
+                  <div class="test-strip-visual mt-4">
+                    <div class="test-line test-line-ctx"></div>
+                    <div class="test-line test-line-comp"></div>
+                    <div class="test-line test-line-neopterin"></div>
+                    <div class="control-line"></div>
+                  </div>
+                  <div class="test-strip-legend">
+                    <div class="legend-item">
+                      <span
+                        class="legend-color"
+                        style="background: var(--primary-color)"
+                      ></span>
+                      <span>CTX-II</span>
+                    </div>
+                    <div class="legend-item">
+                      <span
+                        class="legend-color"
+                        style="background: var(--secondary-color)"
+                      ></span>
+                      <span>COMP</span>
+                    </div>
+                    <div class="legend-item">
+                      <span
+                        class="legend-color"
+                        style="background: var(--neopterin-purple)"
+                      ></span>
+                      <span>Neopterin</span>
+                    </div>
+                    <div class="legend-item">
+                      <span
+                        class="legend-color"
+                        style="background: var(--primary-color)"
+                      ></span>
+                      <span>Control</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1356,13 +1431,13 @@
               >
                 <div class="accordion-body">
                   <p data-lang="early-detection">
-                    Early detection of osteoarthritis enables:
+                    Early detection of PTOA enables:
                   </p>
                   <ul class="list-group list-group-flush mb-3">
                     <li class="list-group-item d-flex align-items-center">
                       <i class="fas fa-check-circle text-success me-2"></i>
                       <span data-lang="therapy"
-                        >Timely intervention with physical therapy</span
+                        >Timely physical therapy interventions</span
                       >
                     </li>
                     <li class="list-group-item d-flex align-items-center">
@@ -1374,8 +1449,7 @@
                     <li class="list-group-item d-flex align-items-center">
                       <i class="fas fa-check-circle text-success me-2"></i>
                       <span data-lang="trials"
-                        >Potential enrollment in clinical trials for new
-                        treatments</span
+                        >Potential enrollment in clinical trials</span
                       >
                     </li>
                     <li class="list-group-item d-flex align-items-center">
@@ -1388,7 +1462,7 @@
                   <p data-lang="clinical-note">
                     Studies show 50% of ACL-reconstructed patients develop PTOA
                     within 12-14 years. Our test detects biochemical changes
-                    years before radiographic evidence.
+                    years before radiographic evidence appears.
                   </p>
                 </div>
               </div>
@@ -1402,7 +1476,7 @@
                   data-bs-target="#biomarkerDetails"
                   data-lang="biomarker-details"
                 >
-                  <i class="fas fa-flask me-2"></i> Biomarker Details
+                  <i class="fas fa-flask me-2"></i> Biomarker Interpretation
                 </button>
               </h2>
               <div
@@ -1411,98 +1485,91 @@
                 data-bs-parent="#infoAccordion"
               >
                 <div class="accordion-body">
-                  <h5>CTX-II Interpretation</h5>
+                  <h5>Test Line Interpretation</h5>
                   <table class="biomarker-table">
                     <thead>
                       <tr>
-                        <th data-lang="category">Category</th>
-                        <th data-lang="range">Range (ng/mmol Cr)</th>
+                        <th data-lang="line">Line</th>
+                        <th data-lang="appearance">Appearance</th>
                         <th data-lang="interpretation">Interpretation</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td data-lang="low">Low</td>
-                        <td>4-15</td>
-                        <td data-lang="ctx-low">
-                          Normal to mildly elevated levels. Likely no OA or
-                          early-stage OA.
+                        <td>CTX-II</td>
+                        <td>Visible line</td>
+                        <td data-lang="ctx-positive">
+                          Cartilage degradation detected (PTOA likely)
                         </td>
                       </tr>
                       <tr>
-                        <td data-lang="moderate">Moderate</td>
-                        <td>16-63</td>
-                        <td data-lang="ctx-moderate">
-                          Moderately elevated. May indicate cartilage breakdown
-                          in progress.
+                        <td>COMP</td>
+                        <td>Visible line</td>
+                        <td data-lang="comp-positive">
+                          Cartilage turnover/remodeling detected
                         </td>
                       </tr>
                       <tr>
-                        <td data-lang="high">High</td>
-                        <td>64+</td>
-                        <td data-lang="ctx-high">
-                          Strong indicator of active OA progression or
-                          post-traumatic OA.
+                        <td>Neopterin</td>
+                        <td>Visible line</td>
+                        <td data-lang="neopterin-positive">
+                          Immune activation detected (consider RA)
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Control</td>
+                        <td>Must appear</td>
+                        <td data-lang="control-line">
+                          Test validity indicator (if absent, test is invalid)
                         </td>
                       </tr>
                     </tbody>
                   </table>
 
-                  <h5 class="mt-4">COMP Interpretation</h5>
+                  <h5 class="mt-4">Clinical Scenarios</h5>
                   <table class="biomarker-table">
                     <thead>
                       <tr>
-                        <th data-lang="category">Category</th>
-                        <th data-lang="range">Range (ng/ml)</th>
+                        <th data-lang="scenario">Scenario</th>
                         <th data-lang="interpretation">Interpretation</th>
+                        <th data-lang="action">Recommended Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td data-lang="low">Low</td>
-                        <td>200-600</td>
-                        <td data-lang="comp-low">
-                          Within normal variation or mild matrix turnover.
+                        <td data-lang="scenario-1">CTX-II +, COMP +</td>
+                        <td data-lang="interpretation-1">
+                          Active cartilage degradation (PTOA likely)
+                        </td>
+                        <td data-lang="action-1">
+                          Orthopedic consult, consider imaging
                         </td>
                       </tr>
                       <tr>
-                        <td data-lang="moderate">Moderate</td>
-                        <td>601-1400</td>
-                        <td data-lang="comp-moderate">
-                          Elevated; possible active joint remodeling.
+                        <td data-lang="scenario-2">CTX-II +, COMP -</td>
+                        <td data-lang="interpretation-2">
+                          Early cartilage breakdown
+                        </td>
+                        <td data-lang="action-2">
+                          Monitor closely, lifestyle modifications
                         </td>
                       </tr>
                       <tr>
-                        <td data-lang="high">High</td>
-                        <td>1401+</td>
-                        <td data-lang="comp-high">
-                          Significant matrix degradation, indicative of active
-                          OA.
+                        <td data-lang="scenario-3">Neopterin +</td>
+                        <td data-lang="interpretation-3">
+                          Possible autoimmune component (consider RA)
                         </td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <h5 class="mt-4">Anti-CCP Interpretation</h5>
-                  <table class="biomarker-table">
-                    <thead>
-                      <tr>
-                        <th data-lang="threshold">Threshold</th>
-                        <th data-lang="interpretation">Interpretation</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>&lt; 5.0 U/mL</td>
-                        <td data-lang="ccp-negative">
-                          Negative, rheumatoid arthritis is unlikely
+                        <td data-lang="action-3">
+                          Rheumatology referral, further testing
                         </td>
                       </tr>
                       <tr>
-                        <td>≥ 5.0 U/mL</td>
-                        <td data-lang="ccp-positive">
-                          Positive, rheumatoid arthritis is likely (98%
-                          specificity)
+                        <td data-lang="scenario-4">All negative</td>
+                        <td data-lang="interpretation-4">
+                          No significant cartilage degradation detected
+                        </td>
+                        <td data-lang="action-4">
+                          Continue routine monitoring
                         </td>
                       </tr>
                     </tbody>
@@ -1554,26 +1621,26 @@
                   for="patientNotes"
                   class="form-label"
                   data-lang="treatment-notes"
-                  >Treatment Notes</label
+                  >Clinical Notes</label
                 >
                 <textarea
                   class="form-control"
                   id="patientNotes"
                   rows="3"
-                  placeholder="Enter details about your treatment, symptoms, or progress..."
+                  placeholder="Enter clinical observations or recommendations..."
                 ></textarea>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="nextSteps" class="form-label" data-lang="next-steps"
-                  >Next Steps</label
+                  >Follow-up Plan</label
                 >
                 <textarea
                   class="form-control"
                   id="nextSteps"
                   rows="3"
-                  placeholder="Enter your planned next steps or recommendations..."
+                  placeholder="Enter recommended follow-up actions..."
                 ></textarea>
               </div>
             </div>
@@ -1581,7 +1648,7 @@
           <div class="save-actions">
             <button class="btn btn-primary" id="saveResultsBtn">
               <i class="fas fa-save me-1"></i>
-              <span data-lang="save-btn">Save Results</span>
+              <span data-lang="save-btn">Save to Records</span>
             </button>
             <button class="btn btn-outline-secondary" id="clearResultsBtn">
               <i class="fas fa-trash-alt me-1"></i>
@@ -1594,12 +1661,12 @@
         <div class="progress-tracker-tab" data-aos="fade-up">
           <h3>
             <i class="fas fa-chart-line me-2"></i>
-            <span data-lang="progress-tracker">Progress Tracker</span>
+            <span data-lang="progress-tracker">Biomarker Trend Analysis</span>
           </h3>
 
           <div class="tracker-form">
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <div class="mb-3">
                   <label for="trackerDate" class="form-label" data-lang="date"
                     >Date</label
@@ -1607,61 +1674,74 @@
                   <input type="date" class="form-control" id="trackerDate" />
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <div class="mb-3">
-                  <label for="trackerCTX" class="form-label"
-                    >CTX-II Level</label
-                  >
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="trackerCTX"
-                    placeholder="Enter CTX-II value"
-                  />
+                  <label for="trackerCTX" class="form-label">CTX-II</label>
+                  <select class="form-control" id="trackerCTX">
+                    <option value="">Select</option>
+                    <option value="negative">Negative</option>
+                    <option value="positive">Positive</option>
+                  </select>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <div class="mb-3">
-                  <label for="trackerCOMP" class="form-label">COMP Level</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="trackerCOMP"
-                    placeholder="Enter COMP value"
-                  />
+                  <label for="trackerCOMP" class="form-label">COMP</label>
+                  <select class="form-control" id="trackerCOMP">
+                    <option value="">Select</option>
+                    <option value="negative">Negative</option>
+                    <option value="positive">Positive</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label for="trackerNeopterin" class="form-label"
+                    >Neopterin</label
+                  >
+                  <select class="form-control" id="trackerNeopterin">
+                    <option value="">Select</option>
+                    <option value="negative">Negative</option>
+                    <option value="positive">Positive</option>
+                  </select>
                 </div>
               </div>
             </div>
             <div class="mb-3">
               <label for="trackerNotes" class="form-label" data-lang="notes"
-                >Notes</label
+                >Clinical Notes</label
               >
               <textarea
                 class="form-control"
                 id="trackerNotes"
                 rows="2"
-                placeholder="Add any notes about your condition or treatment..."
+                placeholder="Add any clinical observations..."
               ></textarea>
             </div>
             <div class="text-center">
               <button class="btn btn-primary" id="addTrackerBtn">
                 <i class="fas fa-plus me-1"></i>
-                <span data-lang="add-entry">Add Entry</span>
+                <span data-lang="add-entry">Add Data Point</span>
               </button>
             </div>
           </div>
 
           <div class="tracker-results">
             <h5 class="text-center mb-3" data-lang="your-progress">
-              Your Progress
+              Biomarker Trends Over Time
             </h5>
-            <div class="table-responsive">
+            <div class="chart-container">
+              <canvas id="biomarkerChart"></canvas>
+            </div>
+
+            <div class="table-responsive mt-4">
               <table class="tracker-table">
                 <thead>
                   <tr>
                     <th data-lang="date">Date</th>
                     <th>CTX-II</th>
                     <th>COMP</th>
+                    <th>Neopterin</th>
                     <th data-lang="status">Status</th>
                     <th data-lang="actions">Actions</th>
                   </tr>
@@ -1670,27 +1750,6 @@
                   <!-- Entries will be added here -->
                 </tbody>
               </table>
-            </div>
-
-            <div class="tracker-graph">
-              <div class="graph-line"></div>
-              <!-- Graph points will be added here -->
-              <div class="graph-legend">
-                <div class="legend-item">
-                  <span
-                    class="legend-color"
-                    style="background: var(--primary-color)"
-                  ></span>
-                  <span>CTX-II</span>
-                </div>
-                <div class="legend-item">
-                  <span
-                    class="legend-color"
-                    style="background: var(--accent-color)"
-                  ></span>
-                  <span>COMP</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -1702,135 +1761,108 @@
             <span data-lang="manual-title">KneeMarker Instruction Manual</span>
           </h3>
 
-          <div class="manual-toggle">
-            <button
-              class="toggle-btn active"
-              id="visualManualBtn"
-              data-lang="visual-manual"
-            >
-              Visual Guide
-            </button>
-            <button
-              class="toggle-btn"
-              id="textManualBtn"
-              data-lang="text-manual"
-            >
-              Text Version
-            </button>
-          </div>
-
-          <div id="visualManual">
-            <div class="manual-step">
-              <div class="step-header">
-                <div class="step-icon">1</div>
-                <h4 class="step-title" data-lang="manual-purpose">
-                  Purpose of the Test
-                </h4>
-              </div>
-              <div class="step-content">
-                <p data-lang="manual-purpose-text">
-                  The KneeMarker is a rapid urine test that detects early signs
-                  of osteoarthritis (OA) in patients recovering from ACL
-                  injuries by measuring biomarkers of cartilage degradation:
-                </p>
-                <ul>
-                  <li data-lang="manual-ctx">
-                    CTX-II (C-Telopeptide of type II collagen)
-                  </li>
-                  <li data-lang="manual-comp">
-                    COMP (Cartilage Oligomeric Matrix Protein)
-                  </li>
-                </ul>
-                <p data-lang="manual-purpose-note">
-                  These markers show cartilage damage before symptoms appear.
-                </p>
-                <img
-                  src="Osteoarthiritis.png"
-                  alt="Purpose Diagram"
-                  class="step-image"
-                />
-              </div>
+          <div class="manual-step">
+            <div class="step-header">
+              <div class="step-icon">1</div>
+              <h4 class="step-title" data-lang="manual-purpose">
+                Test Purpose and Principle
+              </h4>
             </div>
-
-            <div class="manual-step">
-              <div class="step-header">
-                <div class="step-icon">2</div>
-                <h4 class="step-title" data-lang="manual-contents">
-                  What's Inside the Box
-                </h4>
-              </div>
-              <div class="step-content">
-                <div class="manual-grid">
-                  <div class="manual-item">
-                    <i class="fas fa-vial"></i>
-                    <span data-lang="manual-strip"
-                      >1× Lateral Flow Test Strip</span
-                    >
-                  </div>
-                  <div class="manual-item">
-                    <i class="fas fa-flask"></i>
-                    <span data-lang="manual-cup">1× Urine Collection Cup</span>
-                  </div>
-                  <div class="manual-item">
-                    <i class="fas fa-tint"></i>
-                    <span data-lang="manual-dropper"
-                      >1× Disposable Dropper</span
-                    >
-                  </div>
-                  <div class="manual-item">
-                    <i class="fas fa-book"></i>
-                    <span data-lang="manual-manual">1× Instruction Manual</span>
-                  </div>
-                  <div class="manual-item">
-                    <i class="fas fa-qrcode"></i>
-                    <span data-lang="manual-qr"
-                      >1× QR Code Card (for the KneeMarker App)</span
-                    >
-                  </div>
-                  <div class="manual-item">
-                    <i class="fas fa-hands"></i>
-                    <span data-lang="manual-gloves"></span>
-                     </span
-                    >
-                  </div>
-                </div>
-                <img
-                  src="Instruction Manual.png"
-                  alt="Kit Contents"
-                  class="step-image"
-                />
-              </div>
-            </div>
-
-            <!-- More manual steps would go here -->
-            <!-- I've included 2 steps as an example, but you would add all 11 steps from your manual -->
-          </div>
-
-          <div id="textManual" style="display: none">
-            <div class="accordion" id="textManualAccordion">
-              <!-- Text version of manual would go here -->
+            <div class="step-content">
+              <p data-lang="manual-purpose-text">
+                The KneeMarker is a rapid urine test that detects early signs of
+                post-traumatic osteoarthritis (PTOA) in patients recovering from
+                ACL injuries by measuring:
+              </p>
               <ul>
-                <li>
-                  1. Purpose of the Test Why use the KneeMarker? The KneeMarker
-                  is a rapid urine test that detects early signs of
-                  osteoarthritis (OA) in patients recovering from ACL injuries
-                  by measuring biomarkers of cartilage degradation: CTX-II
-                  (C-Telopeptide of type II collagen) COMP (Cartilage Oligomeric
-                  Matrix Protein) These markers show cartilage damage before
-                  symptoms appear.
+                <li data-lang="manual-ctx">
+                  CTX-II (C-Telopeptide of type II collagen) - cartilage
+                  degradation
                 </li>
-                <li>
-                  2. What's Inside the Box
-                  <ul>
-                    <li>1× Lateral Flow Test Strip</li>
-                    <li>1× Urine Collection Cup</li>
-                    <li>1× Disposable Dropper</li>
-                    <li>1× Instruction Manual</li>
-                    <li>1× Glove Pair</li>
-                    <li>1× QR Code Card (for the KneeMarker App)</li>
-                  </ul>
+                <li data-lang="manual-comp">
+                  COMP (Cartilage Oligomeric Matrix Protein) - cartilage
+                  turnover
+                </li>
+                <li data-lang="manual-neopterin">
+                  Neopterin - immune activation (to differentiate from RA)
                 </li>
               </ul>
+              <p data-lang="manual-purpose-note">
+                These markers show biochemical changes before structural damage
+                is visible on imaging.
+              </p>
+              <img
+                src="Osteoarthiritis.png"
+                alt="Purpose Diagram"
+                class="step-image"
+              />
+            </div>
+          </div>
+
+          <div class="manual-step">
+            <div class="step-header">
+              <div class="step-icon">2</div>
+              <h4 class="step-title" data-lang="manual-contents">
+                Kit Contents
+              </h4>
+            </div>
+            <div class="step-content">
+              <div class="manual-grid">
+                <div class="manual-item">
+                  <i class="fas fa-vial"></i>
+                  <span data-lang="manual-strip"
+                    >1× Lateral Flow Test Strip</span
+                  >
+                </div>
+                <div class="manual-item">
+                  <i class="fas fa-flask"></i>
+                  <span data-lang="manual-cup">1× Urine Collection Cup</span>
+                </div>
+                <div class="manual-item">
+                  <i class="fas fa-tint"></i>
+                  <span data-lang="manual-dropper">1× Disposable Dropper</span>
+                </div>
+                <div class="manual-item">
+                  <i class="fas fa-book"></i>
+                  <span data-lang="manual-manual">1× Instruction Manual</span>
+                </div>
+                <div class="manual-item">
+                  <i class="fas fa-qrcode"></i>
+                  <span data-lang="manual-qr"
+                    >1× QR Code (for KneeMarker App)</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="manual-step">
+            <div class="step-header">
+              <div class="step-icon">3</div>
+              <h4 class="step-title" data-lang="manual-procedure">
+                Test Procedure
+              </h4>
+            </div>
+            <div class="step-content">
+              <ol>
+                <li data-lang="manual-step-1">
+                  Collect first-morning urine in the provided cup
+                </li>
+                <li data-lang="manual-step-2">
+                  Use dropper to apply 3 drops to sample well
+                </li>
+                <li data-lang="manual-step-3">
+                  Wait 10 minutes for results to develop
+                </li>
+                <li data-lang="manual-step-4">
+                  Scan test with KneeMarker Pro app or visually interpret lines
+                </li>
+              </ol>
+              <img
+                src="Instruction Manual.png"
+                alt="Kit Contents"
+                class="step-image"
+              />
             </div>
           </div>
         </div>
@@ -1878,18 +1910,24 @@
           <h6 data-lang="references-title">Clinical References</h6>
           <ol>
             <li data-lang="ref-1">
-              Kraus VB, et al. (2010). Biomarkers for osteoarthritis: current
-              position and steps towards further validation. Best Pract Res Clin
-              Rheumatol.
+              Bernotiene E, et al. (2020). Emerging Technologies and Platforms
+              for the Immunodetection of Multiple Biochemical Markers in
+              Osteoarthritis Research and Therapy. Frontiers in Medicine.
             </li>
             <li data-lang="ref-2">
-              Whiting PF, et al. (2010). Anti-CCP antibody testing for the
-              diagnosis of rheumatoid arthritis. Cochrane Database Syst Rev.
+              Garnero P, et al. (2002). Uncoupling of type II collagen synthesis
+              and degradation predicts progression of joint damage in patients
+              with knee osteoarthritis. Arthritis & Rheumatism.
             </li>
             <li data-lang="ref-3">
               Lohmander LS, et al. (2003). The long-term consequence of anterior
               cruciate ligament and meniscus injuries: osteoarthritis. Am J
               Sports Med.
+            </li>
+            <li data-lang="ref-4">
+              Reibnegger G, et al. (1986). Urinary neopterin reflects clinical
+              activity in patients with rheumatoid arthritis. Arthritis &
+              Rheumatism.
             </li>
           </ol>
         </div>
@@ -1897,8 +1935,8 @@
         <!-- Footer -->
         <div class="footer" data-aos="fade-up">
           <p data-lang="footer-text">
-            © 2025 KneeMarker Diagnostics Hogeschoolfontys ABSE minor group 3.
-            All rights reserved. For professional use only.
+            © 2025 KneeMarker Diagnostics - ABSE Minor Project Group 3. All
+            rights reserved. For professional use only.
           </p>
           <div class="d-flex justify-content-center">
             <a href="#" class="mx-2 text-decoration-none" data-lang="privacy"
@@ -1911,16 +1949,8 @@
               >Contact Us</a
             >
           </div>
-          <div class="coder">
-            This was coded by
-            <a
-              href="https://www.linkedin.com/in/rukaiya-mustafizu-muhammad-3410772a2/"
-              >Rukaiya Mustafizu Muhammad</a
-            >
-            and open source on
-            <a href="https://github.com/RukaiyaMustafizu/KneeMarker2">Github</a>
-            & hosted on
-            <a href="https://kneemarker.netlify.app"> Netlify</a>
+          <div class="mt-2">
+            <small> Developed by: Rukaiya Mustafizu Muhammad </small>
           </div>
         </div>
       </div>
@@ -1956,19 +1986,19 @@
           </div>
           <ul>
             <li data-lang="ai-help-1">
-              Interpreting test results and biomarker levels
+              Interpreting test results and biomarker patterns
             </li>
             <li data-lang="ai-help-2">
               Explaining the LFIA technology behind KneeMarker
             </li>
             <li data-lang="ai-help-3">
-              Clinical insights on osteoarthritis progression
+              Clinical insights on PTOA progression post-ACL
             </li>
             <li data-lang="ai-help-4">
               Guidance on patient management protocols
             </li>
             <li data-lang="ai-help-5">Instruction manual guidance</li>
-            <li>Analyzing your historical test results</li>
+            <li>Analyzing historical test trends</li>
           </ul>
           <div class="mt-2" data-lang="ai-prompt">
             How can I assist you today?
@@ -1978,21 +2008,21 @@
         <div class="quick-actions mt-3">
           <button
             class="quick-action-btn"
-            data-question="Explain the clinical significance of elevated CTX-II levels"
+            data-question="Explain the clinical significance of a positive CTX-II line"
             data-lang="quick-action-1"
           >
             CTX-II Significance
           </button>
           <button
             class="quick-action-btn"
-            data-question="How do I properly collect a urine sample for the test?"
+            data-question="How do I differentiate OA from RA using this test?"
             data-lang="quick-action-2"
           >
-            Sample Collection
+            OA vs RA
           </button>
           <button
             class="quick-action-btn"
-            data-question="What do I do if my test shows invalid results?"
+            data-question="What does an invalid test result mean?"
             data-lang="quick-action-3"
           >
             Invalid Results
@@ -2004,7 +2034,7 @@
         <div class="ai-file-upload">
           <label for="ai-file-input">
             <i class="fas fa-paperclip me-1"></i>
-            <span data-lang="upload-results">Upload a document</span>
+            <span data-lang="upload-results">Upload previous results</span>
           </label>
           <input
             type="file"
@@ -2041,33 +2071,34 @@
       // Enhanced Translations with complete Dutch support
       const translations = {
         en: {
-          title: "KneeMarker Early OA Detection System",
-          subtitle: "Revolutionizing Post-ACL Osteoarthritis Monitoring",
+          title: "KneeMarker PTOA Monitoring System",
+          subtitle:
+            "Early Detection of Post-Traumatic Osteoarthritis After ACL Injury",
           "about-test": "About the KneeMarker Test",
           "test-description":
-            "The KneeMarker test is an innovative point-of-care lateral flow immunoassay (LFIA) designed for early detection of post-traumatic osteoarthritis (PTOA) in ACL-reconstructed patients. Our test measures three key biomarkers:",
+            "The KneeMarker is a lateral flow immunoassay (LFIA) designed for early detection of post-traumatic osteoarthritis (PTOA) in ACL-reconstructed patients. Our test detects three key biomarkers in urine:",
           "ctx-description":
-            "C-telopeptide of type II collagen - a specific marker for cartilage degradation",
+            "C-telopeptide of type II collagen - indicates cartilage breakdown",
           "comp-description":
-            "Cartilage Oligomeric Matrix Protein - indicates cartilage turnover and structural integrity",
-          "ccp-description":
-            "Differentiates osteoarthritis from rheumatoid arthritis with 98% specificity",
+            "Cartilage Oligomeric Matrix Protein - shows cartilage turnover",
+          "neopterin-description":
+            "Differentiates OA from rheumatoid arthritis (RA)",
           "test-details":
-            "These biomarkers help indicate cartilage breakdown before visible symptoms appear. The test is 98% accurate when used correctly and provides results in just 10 minutes.",
+            "These biomarkers help indicate cartilage breakdown before visible symptoms appear. The test is 95% accurate when used correctly and provides results in just 10 minutes.",
           "how-it-works": "How It Works",
           "how-works-1":
-            "The test utilizes gold nanoparticle-conjugated antibodies in a lateral flow immunoassay format. When urine is applied, biomarkers (CTX-II and COMP) bind to specific antibodies, forming visible complexes at test lines. The anti-CCP strip detects rheumatoid arthritis antibodies separately.",
+            "The test uses gold nanoparticle-conjugated antibodies in a lateral flow immunoassay format. When urine is applied, biomarkers (CTX-II, COMP, and Neopterin) bind to specific antibodies, forming visible lines if present.",
           "how-works-2":
-            "Our proprietary algorithm analyzes line intensity to provide semi-quantitative results with 98% clinical accuracy compared to ELISA standards. The test requires no special storage or sample processing.",
+            "The test provides qualitative results (positive/negative) with 95% clinical accuracy compared to ELISA standards. No special storage or sample processing is required.",
           "clinical-significance": "Clinical Significance",
-          "biomarker-details": "Biomarker Details",
-          "early-detection": "Early detection of osteoarthritis enables:",
-          therapy: "Timely intervention with physical therapy",
+          "biomarker-details": "Biomarker Interpretation",
+          "early-detection": "Early detection of PTOA enables:",
+          therapy: "Timely physical therapy interventions",
           lifestyle: "Lifestyle modifications to slow progression",
-          trials: "Potential enrollment in clinical trials for new treatments",
+          trials: "Potential enrollment in clinical trials",
           surgery: "Better surgical outcomes when addressed early",
           "clinical-note":
-            "Studies show 50% of ACL-reconstructed patients develop PTOA within 12-14 years. Our test detects biochemical changes years before radiographic evidence.",
+            "Studies show 50% of ACL-reconstructed patients develop PTOA within 12-14 years. Our test detects biochemical changes years before radiographic evidence appears.",
           "upload-instructions": "Upload Test Strip for Analysis",
           "step-1": "Upload Test",
           "step-2": "Analyze",
@@ -2094,29 +2125,29 @@
           "ai-name": "KneeMarker AI",
           "ai-welcome":
             "Hello! I'm your KneeMarker clinical assistant. I can help with:",
-          "ai-help-1": "Interpreting test results and biomarker levels",
+          "ai-help-1": "Interpreting test results and biomarker patterns",
           "ai-help-2": "Explaining the LFIA technology behind KneeMarker",
-          "ai-help-3": "Clinical insights on osteoarthritis progression",
+          "ai-help-3": "Clinical insights on PTOA progression post-ACL",
           "ai-help-4": "Guidance on patient management protocols",
           "ai-help-5": "Instruction manual guidance",
           "ai-prompt": "How can I assist you today?",
           "ai-placeholder":
             "Ask about test interpretation, biomarkers, or clinical protocols...",
           "quick-action-1": "CTX-II Significance",
-          "quick-action-2": "Sample Collection",
+          "quick-action-2": "OA vs RA",
           "quick-action-3": "Invalid Results",
           "positive-interpretation":
-            "Two lines detected (T and C lines). This indicates the presence of cartilage degradation biomarkers (CTX-II and/or COMP).",
+            "One or more test lines detected (CTX-II and/or COMP). This indicates the presence of cartilage degradation biomarkers.",
           "positive-action":
             "Consult with your healthcare provider to discuss the results and potential next steps for managing joint health. Consider baseline radiographic evaluation and follow-up biomarker monitoring.",
           "negative-interpretation":
-            "Only the control line (C line) detected. No significant levels of cartilage degradation biomarkers were found.",
+            "Only the control line detected. No significant levels of cartilage degradation biomarkers were found.",
           "negative-action":
             "Continue monitoring as recommended by your healthcare provider. For ACL-reconstructed patients, we recommend retesting every 6 months for the first 2 years, then annually.",
           "invalid-interpretation":
             "No control line detected. This may be due to:",
           "invalid-reason-1":
-            "Insufficient sample volume (minimum 50μL required)",
+            "Insufficient sample volume (minimum 3 drops required)",
           "invalid-reason-2":
             "Expired test kit (check package for expiration date)",
           "invalid-reason-3": "Improper test execution (review instructions)",
@@ -2124,101 +2155,110 @@
             "Repeat the test with a fresh urine sample and new test kit if available. Ensure proper sample application technique.",
           "share-results": "Share Results",
           "download-report": "Download Clinical Report",
-          category: "Category",
-          range: "Range",
+          line: "Line",
+          appearance: "Appearance",
           interpretation: "Interpretation",
-          low: "Low",
-          moderate: "Moderate",
-          high: "High",
-          threshold: "Threshold",
-          "ctx-low":
-            "Normal to mildly elevated levels. Likely no OA or early-stage OA.",
-          "ctx-moderate":
-            "Moderately elevated. May indicate cartilage breakdown in progress.",
-          "ctx-high":
-            "Strong indicator of active OA progression or post-traumatic OA.",
-          "comp-low": "Within normal variation or mild matrix turnover.",
-          "comp-moderate": "Elevated; possible active joint remodeling.",
-          "comp-high":
-            "Significant matrix degradation, indicative of active OA.",
-          "ccp-negative": "Negative, rheumatoid arthritis is unlikely",
-          "ccp-positive":
-            "Positive, rheumatoid arthritis is likely (98% specificity)",
+          "ctx-positive": "Cartilage degradation detected (PTOA likely)",
+          "comp-positive": "Cartilage turnover/remodeling detected",
+          "neopterin-positive": "Immune activation detected (consider RA)",
+          "control-line": "Test validity indicator",
+          scenario: "Scenario",
+          "scenario-1": "CTX-II +, COMP +",
+          "interpretation-1": "Active cartilage degradation (PTOA likely)",
+          "action-1": "Orthopedic consult, consider imaging",
+          "scenario-2": "CTX-II +, COMP -",
+          "interpretation-2": "Early cartilage breakdown",
+          "action-2": "Monitor closely, lifestyle modifications",
+          "scenario-3": "Neopterin +",
+          "interpretation-3": "Possible autoimmune component (consider RA)",
+          "action-3": "Rheumatology referral, further testing",
+          "scenario-4": "All negative",
+          "interpretation-4": "No significant cartilage degradation detected",
+          "action-4": "Continue routine monitoring",
           "references-title": "Clinical References",
           "ref-1":
-            "Kraus VB, et al. (2010). Biomarkers for osteoarthritis: current position and steps towards further validation. Best Pract Res Clin Rheumatol.",
+            "Bernotiene E, et al. (2020). Emerging Technologies and Platforms for the Immunodetection of Multiple Biochemical Markers in Osteoarthritis Research and Therapy. Frontiers in Medicine.",
           "ref-2":
-            "Whiting PF, et al. (2010). Anti-CCP antibody testing for the diagnosis of rheumatoid arthritis. Cochrane Database Syst Rev.",
+            "Garnero P, et al. (2002). Uncoupling of type II collagen synthesis and degradation predicts progression of joint damage in patients with knee osteoarthritis. Arthritis & Rheumatism.",
           "ref-3":
             "Lohmander LS, et al. (2003). The long-term consequence of anterior cruciate ligament and meniscus injuries: osteoarthritis. Am J Sports Med.",
+          "ref-4":
+            "Reibnegger G, et al. (1986). Urinary neopterin reflects clinical activity in patients with rheumatoid arthritis. Arthritis & Rheumatism.",
           "footer-text":
-            "© 2025 KneeMarker Diagnostics. All rights reserved. For professional use only.",
+            "© 2025 KneeMarker Diagnostics - ABSE Minor Project Group 3. All rights reserved. For professional use only.",
           privacy: "Privacy Policy",
           terms: "Terms of Use",
           contact: "Contact Us",
           "manual-title": "KneeMarker Instruction Manual",
-          "visual-manual": "Visual Guide",
-          "text-manual": "Text Version",
-          "manual-purpose": "Purpose of the Test",
+          "manual-purpose": "Test Purpose and Principle",
           "manual-purpose-text":
-            "The KneeMarker is a rapid urine test that detects early signs of osteoarthritis (OA) in patients recovering from ACL injuries by measuring biomarkers of cartilage degradation:",
-          "manual-ctx": "CTX-II (C-Telopeptide of type II collagen)",
-          "manual-comp": "COMP (Cartilage Oligomeric Matrix Protein)",
+            "The KneeMarker is a rapid urine test that detects early signs of post-traumatic osteoarthritis (PTOA) in patients recovering from ACL injuries by measuring:",
+          "manual-ctx":
+            "CTX-II (C-Telopeptide of type II collagen) - cartilage degradation",
+          "manual-comp":
+            "COMP (Cartilage Oligomeric Matrix Protein) - cartilage turnover",
+          "manual-neopterin":
+            "Neopterin - immune activation (to differentiate from RA)",
           "manual-purpose-note":
-            "These markers show cartilage damage before symptoms appear.",
-          "manual-contents": "What's Inside the Box",
+            "These markers show biochemical changes before structural damage is visible on imaging.",
+          "manual-contents": "Kit Contents",
           "manual-strip": "1× Lateral Flow Test Strip",
           "manual-cup": "1× Urine Collection Cup",
           "manual-dropper": "1× Disposable Dropper",
           "manual-manual": "1× Instruction Manual",
-          "manual-qr": "1× QR Code Card (for the KneeMarker App)",
-          "manual-gloves": "1× Disposable Glove Pair",
+          "manual-qr": "1× QR Code (for KneeMarker App)",
+          "manual-procedure": "Test Procedure",
+          "manual-step-1": "Collect first-morning urine in the provided cup",
+          "manual-step-2": "Use dropper to apply 3 drops to sample well",
+          "manual-step-3": "Wait 10 minutes for results to develop",
+          "manual-step-4":
+            "Scan test with KneeMarker Pro app or visually interpret lines",
           "consult-specialist": "Consult Specialist",
           "consult-note":
             "I can help connect you with a knee specialist or answer any clinical questions you may have about the results.",
           "save-results": "Save Your Results",
-          "treatment-notes": "Treatment Notes",
-          "next-steps": "Next Steps",
-          "save-btn": "Save Results",
+          "treatment-notes": "Clinical Notes",
+          "next-steps": "Follow-up Plan",
+          "save-btn": "Save to Records",
           "clear-btn": "Clear",
-          "progress-tracker": "Progress Tracker",
+          "progress-tracker": "Biomarker Trend Analysis",
           date: "Date",
-          notes: "Notes",
-          "add-entry": "Add Entry",
-          "your-progress": "Your Progress",
+          notes: "Clinical Notes",
+          "add-entry": "Add Data Point",
+          "your-progress": "Biomarker Trends Over Time",
           status: "Status",
           actions: "Actions",
-          "upload-results": "Upload Previous Results",
+          "upload-results": "Upload previous results",
         },
         nl: {
-          title: "KneeMarker Vroege OA Detectie Systeem",
-          subtitle: "Revolutionaire monitoring van post-ACL artrose",
+          title: "KneeMarker PTOA Monitoringssysteem",
+          subtitle:
+            "Vroege detectie van posttraumatische artrose na ACL-letsel",
           "about-test": "Over de KneeMarker Test",
           "test-description":
-            "De KneeMarker-test is een innovatieve point-of-care laterale stroom immunoassay (LFIA) ontworpen voor vroege detectie van post-traumatische artrose (PTOA) bij ACL-gereconstrueerde patiënten. Onze test meet drie belangrijke biomarkers:",
+            "De KneeMarker is een laterale stroom immunoassay (LFIA) ontworpen voor vroege detectie van posttraumatische artrose (PTOA) bij ACL-gereconstrueerde patiënten. Onze test detecteert drie belangrijke biomarkers in urine:",
           "ctx-description":
-            "C-telopeptide van type II collageen - een specifieke marker voor kraakbeenafbraak",
+            "C-telopeptide van type II collageen - duidt op kraakbeenafbraak",
           "comp-description":
-            "Cartilage Oligomeric Matrix Protein - geeft kraakbeenomzet en structurele integriteit aan",
-          "ccp-description":
-            "Onderscheidt artrose van reumatoïde artritis met 98% specificiteit",
+            "Cartilage Oligomeric Matrix Protein - toont kraakbeenomzet aan",
+          "neopterin-description":
+            "Onderscheidt OA van reumatoïde artritis (RA)",
           "test-details":
-            "Deze biomarkers helpen bij het aangeven van kraakbeenafbraak voordat zichtbare symptomen verschijnen. De test is 98% nauwkeurig bij correct gebruik en geeft resultaten in slechts 10 minuten.",
-          "how-it-works": "Hoe het Werkt",
+            "Deze biomarkers helpen bij het aangeven van kraakbeenafbraak voordat zichtbare symptomen verschijnen. De test is 95% nauwkeurig bij correct gebruik en geeft resultaten in slechts 10 minuten.",
+          "how-it-works": "Hoe het werkt",
           "how-works-1":
-            "De test gebruikt goud-nanodeeltje-geconjugeerde antilichamen in een laterale stroom immunoassay-formaat. Wanneer urine wordt aangebracht, binden biomarkers (CTX-II en COMP) aan specifieke antilichamen, waardoor zichtbare complexen ontstaan bij testlijnen. De anti-CCP-strip detecteert afzonderlijk reumatoïde artritis-antilichamen.",
+            "De test gebruikt met goudnanodeeltjes geconjugeerde antilichamen in een laterale stroom immunoassay-formaat. Wanneer urine wordt aangebracht, binden biomarkers (CTX-II, COMP en Neopterin) aan specifieke antilichamen, waardoor zichtbare lijnen ontstaan indien aanwezig.",
           "how-works-2":
-            "Ons eigen algoritme analyseert lijnintensiteit om semi-kwantitatieve resultaten te geven met 98% klinische nauwkeurigheid vergeleken met ELISA-standaarden. De test vereist geen speciale opslag of monsterverwerking.",
-          "clinical-significance": "Klinische Betekenis",
-          "biomarker-details": "Biomarker Details",
-          "early-detection": "Vroege detectie van artrose maakt het mogelijk:",
-          therapy: "Tijdige interventie met fysiotherapie",
+            "De test geeft kwalitatieve resultaten (positief/negatief) met 95% klinische nauwkeurigheid vergeleken met ELISA-standaarden. Er is geen speciale opslag of monsterverwerking vereist.",
+          "clinical-significance": "Klinische betekenis",
+          "biomarker-details": "Biomarker Interpretatie",
+          "early-detection": "Vroege detectie van PTOA maakt mogelijk:",
+          therapy: "Tijdige fysiotherapie-interventies",
           lifestyle: "Levensstijlaanpassingen om progressie te vertragen",
-          trials:
-            "Mogelijke deelname aan klinische onderzoeken voor nieuwe behandelingen",
+          trials: "Mogelijke deelname aan klinische onderzoeken",
           surgery: "Betere chirurgische resultaten bij vroegtijdige aanpak",
           "clinical-note":
-            "Studies tonen aan dat 50% van de ACL-gereconstrueerde patiënten PTOA ontwikkelen binnen 12-14 jaar. Onze test detecteert biochemische veranderingen jaren vóór radiografisch bewijs.",
+            "Studies tonen aan dat 50% van de ACL-gereconstrueerde patiënten PTOA ontwikkelen binnen 12-14 jaar. Onze test detecteert biochemische veranderingen jaren voordat radiografisch bewijs verschijnt.",
           "upload-instructions": "Upload Teststrip voor Analyse",
           "step-1": "Upload Test",
           "step-2": "Analyseren",
@@ -2228,14 +2268,14 @@
           analyze: "Teststrip Analyseren",
           analyzing: "Analyseren...",
           result: "Analyse voltooid! Resultaat: Positief",
-          "upload-text": "Sleep uw teststrip afbeelding hierheen",
+          "upload-text": "Sleep uw teststripafbeelding hierheen",
           "or-text": "of klik om bestanden te bladeren",
           "positive-result":
             "Positief - Biomarkers voor kraakbeenafbraak gedetecteerd",
           "negative-result": "Negatief - Geen biomarkers gedetecteerd",
           "invalid-result": "Ongeldig - Herhaal de test alstublieft",
           "upload-error": "Upload eerst een afbeelding",
-          "video-title": "KneeMarker Test Demonstratie",
+          "video-title": "KneeMarker Testdemonstratie",
           "video-description":
             "Zie de test in actie met onze gedetailleerde demonstratievideo",
           "scan-text": "Scan voor meer info",
@@ -2246,29 +2286,29 @@
           "ai-name": "KneeMarker AI",
           "ai-welcome":
             "Hallo! Ik ben uw KneeMarker klinische assistent. Ik kan helpen met:",
-          "ai-help-1": "Interpreteren van testresultaten en biomarker niveaus",
+          "ai-help-1": "Interpreteren van testresultaten en biomarkerpatronen",
           "ai-help-2": "Uitleg over de LFIA-technologie achter KneeMarker",
-          "ai-help-3": "Klinische inzichten in artroseprogressie",
+          "ai-help-3": "Klinische inzichten in PTOA-progressie na ACL",
           "ai-help-4": "Begeleiding bij patiëntbeheerprotocollen",
-          "ai-help-5": "Instructiehandleiding begeleiding",
+          "ai-help-5": "Instructiehandleidingbegeleiding",
           "ai-prompt": "Hoe kan ik u vandaag helpen?",
           "ai-placeholder":
             "Vraag over testinterpretatie, biomarkers of klinische protocollen...",
           "quick-action-1": "CTX-II Betekenis",
-          "quick-action-2": "Monsterverzameling",
+          "quick-action-2": "OA vs RA",
           "quick-action-3": "Ongeldige Resultaten",
           "positive-interpretation":
-            "Twee lijnen gedetecteerd (T- en C-lijnen). Dit duidt op de aanwezigheid van biomarkers voor kraakbeenafbraak (CTX-II en/of COMP).",
+            "Een of meer testlijnen gedetecteerd (CTX-II en/of COMP). Dit duidt op de aanwezigheid van biomarkers voor kraakbeenafbraak.",
           "positive-action":
             "Overleg met uw zorgverlener om de resultaten en mogelijke vervolgstappen voor het beheren van gewrichtsgezondheid te bespreken. Overweeg basislijn radiografische evaluatie en follow-up biomonitoring.",
           "negative-interpretation":
-            "Alleen de controlelijn (C-lijn) gedetecteerd. Er werden geen significante niveaus van biomarkers voor kraakbeenafbraak gevonden.",
+            "Alleen de controlelijn gedetecteerd. Er werden geen significante niveaus van biomarkers voor kraakbeenafbraak gevonden.",
           "negative-action":
             "Blijf monitoren zoals aanbevolen door uw zorgverlener. Voor ACL-gereconstrueerde patiënten raden we aan elke 6 maanden te testen gedurende de eerste 2 jaar, daarna jaarlijks.",
           "invalid-interpretation":
             "Geen controlelijn gedetecteerd. Dit kan komen door:",
           "invalid-reason-1":
-            "Onvoldoende monstervolume (minimaal 50μL vereist)",
+            "Onvoldoende monstervolume (minimaal 3 druppels vereist)",
           "invalid-reason-2":
             "Verlopen testkit (controleer verpakking op vervaldatum)",
           "invalid-reason-3": "Onjuiste testuitvoering (raadpleeg instructies)",
@@ -2276,71 +2316,81 @@
             "Herhaal de test met een vers urinemonster en nieuwe testkit indien beschikbaar. Zorg voor juiste monstertoepassingstechniek.",
           "share-results": "Resultaten Delen",
           "download-report": "Klinisch Rapport Downloaden",
-          category: "Categorie",
-          range: "Bereik",
+          line: "Lijn",
+          appearance: "Verschijning",
           interpretation: "Interpretatie",
-          low: "Laag",
-          moderate: "Matig",
-          high: "Hoog",
-          threshold: "Drempelwaarde",
-          "ctx-low":
-            "Normale tot licht verhoogde niveaus. Waarschijnlijk geen OA of vroeg stadium OA.",
-          "ctx-moderate":
-            "Matig verhoogd. Kan wijzen op kraakbeenafbraak in progressie.",
-          "ctx-high":
-            "Sterke indicator van actieve OA-progressie of post-traumatische OA.",
-          "comp-low": "Binnen normale variatie of milde matrixomzet.",
-          "comp-moderate": "Verhoogd; mogelijk actieve gewrichtsremodellering.",
-          "comp-high":
-            "Significante matrixafbraak, indicatief voor actieve OA.",
-          "ccp-negative": "Negatief, reumatoïde artritis is onwaarschijnlijk",
-          "ccp-positive":
-            "Positief, reumatoïde artritis is waarschijnlijk (98% specificiteit)",
+          "ctx-positive": "Kraakbeenafbraak gedetecteerd (PTOA waarschijnlijk)",
+          "comp-positive": "Kraakbeenomzet/remodellering gedetecteerd",
+          "neopterin-positive": "Immuunactivatie gedetecteerd (overweeg RA)",
+          "control-line": "Testvaliditeitsindicator",
+          scenario: "Scenario",
+          "scenario-1": "CTX-II +, COMP +",
+          "interpretation-1": "Actieve kraakbeenafbraak (PTOA waarschijnlijk)",
+          "action-1": "Orthopedisch consult, overweeg beeldvorming",
+          "scenario-2": "CTX-II +, COMP -",
+          "interpretation-2": "Vroege kraakbeenafbraak",
+          "action-2": "Monitor nauwlettend, levensstijlaanpassingen",
+          "scenario-3": "Neopterin +",
+          "interpretation-3": "Mogelijke auto-immuuncomponent (overweeg RA)",
+          "action-3": "Reumatologiedoorverwijzing, verder onderzoek",
+          "scenario-4": "Alles negatief",
+          "interpretation-4": "Geen significante kraakbeenafbraak gedetecteerd",
+          "action-4": "Routinemonitoring voortzetten",
           "references-title": "Klinische Referenties",
           "ref-1":
-            "Kraus VB, et al. (2010). Biomarkers voor artrose: huidige positie en stappen naar verdere validatie. Best Pract Res Clin Rheumatol.",
+            "Bernotiene E, et al. (2020). Emerging Technologies and Platforms for the Immunodetection of Multiple Biochemical Markers in Osteoarthritis Research and Therapy. Frontiers in Medicine.",
           "ref-2":
-            "Whiting PF, et al. (2010). Anti-CCP antilichaamtesten voor de diagnose van reumatoïde artritis. Cochrane Database Syst Rev.",
+            "Garnero P, et al. (2002). Uncoupling of type II collagen synthesis and degradation predicts progression of joint damage in patients with knee osteoarthritis. Arthritis & Rheumatism.",
           "ref-3":
-            "Lohmander LS, et al. (2003). De langetermijngevolgen van voorste kruisband- en meniscusletsels: artrose. Am J Sports Med.",
+            "Lohmander LS, et al. (2003). The long-term consequence of anterior cruciate ligament and meniscus injuries: osteoarthritis. Am J Sports Med.",
+          "ref-4":
+            "Reibnegger G, et al. (1986). Urinary neopterin reflects clinical activity in patients with rheumatoid arthritis. Arthritis & Rheumatism.",
           "footer-text":
-            "© 2025 KneeMarker Diagnostics. Alle rechten voorbehouden. Voor professioneel gebruik alleen.",
+            "© 2025 KneeMarker Diagnostics - ABSE Minor Project Groep 3. Alle rechten voorbehouden. Voor professioneel gebruik alleen.",
           privacy: "Privacybeleid",
           terms: "Gebruiksvoorwaarden",
           contact: "Contacteer Ons",
           "manual-title": "KneeMarker Instructiehandleiding",
-          "visual-manual": "Visuele Gids",
-          "text-manual": "Tekstversie",
-          "manual-purpose": "Doel van de Test",
+          "manual-purpose": "Testdoel en Principe",
           "manual-purpose-text":
-            "De KneeMarker is een snelle urinetest die vroege tekenen van artrose (OA) opspoort bij patiënten die herstellen van ACL-verwondingen door biomarkers voor kraakbeenafbraak te meten:",
-          "manual-ctx": "CTX-II (C-telopeptide van type II collageen)",
-          "manual-comp": "COMP (Cartilage Oligomeric Matrix Protein)",
+            "De KneeMarker is een snelle urinetest die vroege tekenen van posttraumatische artrose (PTOA) detecteert bij patiënten die herstellen van ACL-letsels door te meten:",
+          "manual-ctx":
+            "CTX-II (C-telopeptide van type II collageen) - kraakbeenafbraak",
+          "manual-comp":
+            "COMP (Cartilage Oligomeric Matrix Protein) - kraakbeenomzet",
+          "manual-neopterin":
+            "Neopterin - immuunactivatie (om te differentiëren van RA)",
           "manual-purpose-note":
-            "Deze markers tonen kraakbeenschade voordat symptomen verschijnen.",
-          "manual-contents": "Wat zit er in de verpakking",
+            "Deze markers tonen biochemische veranderingen voordat structurele schade zichtbaar is op beeldvorming.",
+          "manual-contents": "Kitinhoud",
           "manual-strip": "1× Laterale stroom teststrip",
           "manual-cup": "1× Urineopvangbeker",
-          "manual-dropper": "1× Wegwerp pipet",
+          "manual-dropper": "1× Wegwerppipet",
           "manual-manual": "1× Instructiehandleiding",
-          "manual-qr": "1× QR-code kaart (voor de KneeMarker App)",
-          "manual-gloves": "1× paar handschoenen",
+          "manual-qr": "1× QR-code (voor KneeMarker App)",
+          "manual-procedure": "Testprocedure",
+          "manual-step-1": "Verzamel ochtendurine in de meegeleverde beker",
+          "manual-step-2":
+            "Gebruik pipet om 3 druppels in het monsterputje aan te brengen",
+          "manual-step-3": "Wacht 10 minuten tot resultaten ontwikkelen",
+          "manual-step-4":
+            "Scan test met KneeMarker Pro app of interpreteer lijnen visueel",
           "consult-specialist": "Raadpleeg Specialist",
           "consult-note":
             "Ik kan u helpen een knie-specialist te vinden of klinische vragen over de resultaten beantwoorden.",
           "save-results": "Bewaar Uw Resultaten",
-          "treatment-notes": "Behandelnotities",
-          "next-steps": "Volgende Stappen",
-          "save-btn": "Resultaten Opslaan",
+          "treatment-notes": "Klinische Notities",
+          "next-steps": "Vervolgplan",
+          "save-btn": "Opslaan in Dossier",
           "clear-btn": "Wissen",
-          "progress-tracker": "Voortgangsmonitor",
+          "progress-tracker": "Biomarker Trendanalyse",
           date: "Datum",
-          notes: "Notities",
-          "add-entry": "Toevoegen",
-          "your-progress": "Uw Voortgang",
+          notes: "Klinische Notities",
+          "add-entry": "Gegevenspunt Toevoegen",
+          "your-progress": "Biomarker Trends in de Tijd",
           status: "Status",
           actions: "Acties",
-          "upload-results": "Vorige Resultaten Uploaden",
+          "upload-results": "Vorige resultaten uploaden",
         },
       };
 
@@ -2366,10 +2416,6 @@
       const aiUserInput = document.getElementById("ai-user-input");
       const aiSendBtn = document.getElementById("ai-send-btn");
       const quickActionBtns = document.querySelectorAll(".quick-action-btn");
-      const visualManualBtn = document.getElementById("visualManualBtn");
-      const textManualBtn = document.getElementById("textManualBtn");
-      const visualManual = document.getElementById("visualManual");
-      const textManual = document.getElementById("textManual");
       const saveResultsSection = document.getElementById("saveResultsSection");
       const saveResultsBtn = document.getElementById("saveResultsBtn");
       const clearResultsBtn = document.getElementById("clearResultsBtn");
@@ -2380,9 +2426,78 @@
       const trackerDate = document.getElementById("trackerDate");
       const trackerCTX = document.getElementById("trackerCTX");
       const trackerCOMP = document.getElementById("trackerCOMP");
+      const trackerNeopterin = document.getElementById("trackerNeopterin");
       const trackerNotes = document.getElementById("trackerNotes");
       const aiFileInput = document.getElementById("ai-file-input");
       const aiFileInfo = document.getElementById("ai-file-info");
+      const biomarkerChartCanvas = document.getElementById("biomarkerChart");
+
+      // Initialize biomarker chart
+      let biomarkerChart = new Chart(biomarkerChartCanvas, {
+        type: "line",
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: "CTX-II",
+              data: [],
+              borderColor: "rgb(22, 96, 136)",
+              backgroundColor: "rgba(22, 96, 136, 0.1)",
+              tension: 0.1,
+              fill: true,
+            },
+            {
+              label: "COMP",
+              data: [],
+              borderColor: "rgb(74, 111, 165)",
+              backgroundColor: "rgba(74, 111, 165, 0.1)",
+              tension: 0.1,
+              fill: true,
+            },
+            {
+              label: "Neopterin",
+              data: [],
+              borderColor: "rgb(138, 43, 226)",
+              backgroundColor: "rgba(138, 43, 226, 0.1)",
+              tension: 0.1,
+              fill: true,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 1,
+              ticks: {
+                callback: function (value) {
+                  return value === 1
+                    ? "Positive"
+                    : value === 0
+                    ? "Negative"
+                    : "";
+                },
+              },
+            },
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  let label = context.dataset.label || "";
+                  if (label) {
+                    label += ": ";
+                  }
+                  label += context.raw === 1 ? "Positive" : "Negative";
+                  return label;
+                },
+              },
+            },
+          },
+        },
+      });
 
       // Initialize language
       function updateLanguage(lang) {
@@ -2414,21 +2529,6 @@
       languageSelector.addEventListener("change", function () {
         const lang = this.value;
         updateLanguage(lang);
-      });
-
-      // Manual toggle functionality
-      visualManualBtn.addEventListener("click", function () {
-        visualManualBtn.classList.add("active");
-        textManualBtn.classList.remove("active");
-        visualManual.style.display = "block";
-        textManual.style.display = "none";
-      });
-
-      textManualBtn.addEventListener("click", function () {
-        textManualBtn.classList.add("active");
-        visualManualBtn.classList.remove("active");
-        textManual.style.display = "block";
-        visualManual.style.display = "none";
       });
 
       // Upload area functionality
@@ -2576,9 +2676,11 @@
         // This is a simplified approach - in reality you'd use proper image processing
         // Here we'll simulate analyzing the image for test lines
 
-        // Sample some points where we expect the test and control lines to be
-        const testLineY = Math.floor(height * 0.4);
-        const controlLineY = Math.floor(height * 0.6);
+        // Sample points where we expect the test and control lines to be
+        const ctxLineY = Math.floor(height * 0.4);
+        const compLineY = Math.floor(height * 0.5);
+        const neopterinLineY = Math.floor(height * 0.6);
+        const controlLineY = Math.floor(height * 0.7);
         const sampleWidth = Math.floor(width * 0.8);
         const sampleX = Math.floor(width * 0.1);
 
@@ -2592,19 +2694,45 @@
         );
 
         if (!controlLinePresent) {
-          return "invalid"; // No control line = invalid test
+          return {
+            status: "invalid",
+            ctx: false,
+            comp: false,
+            neopterin: false,
+            control: false,
+          };
         }
 
-        // Check for test line
-        const testLinePresent = checkForLine(
+        // Check for test lines
+        const ctxLinePresent = checkForLine(
           imageData,
           width,
           sampleX,
-          testLineY,
+          ctxLineY,
+          sampleWidth
+        );
+        const compLinePresent = checkForLine(
+          imageData,
+          width,
+          sampleX,
+          compLineY,
+          sampleWidth
+        );
+        const neopterinLinePresent = checkForLine(
+          imageData,
+          width,
+          sampleX,
+          neopterinLineY,
           sampleWidth
         );
 
-        return testLinePresent ? "positive" : "negative";
+        return {
+          status: "valid",
+          ctx: ctxLinePresent,
+          comp: compLinePresent,
+          neopterin: neopterinLinePresent,
+          control: true,
+        };
       }
 
       // Helper function to check for a line at a specific y position
@@ -2617,7 +2745,7 @@
           const x = startX + Math.floor((i / samplePoints) * sampleWidth);
           const pixelIndex = (y * width + x) * 4;
 
-          // Simple check for dark pixels (red lines in test strips)
+          // Simple check for dark pixels (colored lines in test strips)
           const r = imageData[pixelIndex];
           const g = imageData[pixelIndex + 1];
           const b = imageData[pixelIndex + 2];
@@ -2635,20 +2763,69 @@
       function displayResults(result, imageUrl, lang) {
         let resultText, resultClass, interpretation, icon;
 
-        switch (result) {
-          case "positive":
-            resultText = translations[lang]["positive-result"];
-            resultClass = "danger";
-            icon = "exclamation-triangle";
+        if (result.status === "invalid") {
+          resultText = translations[lang]["invalid-result"];
+          resultClass = "warning";
+          icon = "exclamation-circle";
+          interpretation = `
+            <div class="alert alert-light border mb-3">
+              <h5><i class="fas fa-info-circle text-primary me-2"></i> ${
+                translations[lang]["invalid-interpretation"]
+              }</h5>
+              <ul>
+                <li>${translations[lang]["invalid-reason-1"]}</li>
+                <li>${translations[lang]["invalid-reason-2"]}</li>
+                <li>${translations[lang]["invalid-reason-3"]}</li>
+              </ul>
+            </div>
+            <div class="alert alert-info">
+              <h5><i class="fas fa-clipboard-check text-info me-2"></i> ${
+                translations[lang]["recommended-action"] || "Recommended Action"
+              }</h5>
+              <p>${translations[lang]["invalid-action"]}</p>
+            </div>
+          `;
+        } else {
+          // Valid test - determine if positive or negative
+          const isPositive = result.ctx || result.comp || result.neopterin;
+          resultText = isPositive
+            ? translations[lang]["positive-result"]
+            : translations[lang]["negative-result"];
+          resultClass = isPositive ? "danger" : "success";
+          icon = isPositive ? "exclamation-triangle" : "check-circle";
+
+          if (isPositive) {
             interpretation = `
               <div class="alert alert-light border mb-3">
                 <h5><i class="fas fa-info-circle text-primary me-2"></i> ${
                   translations[lang]["positive-interpretation"]
                 }</h5>
-                <p class="mb-0">${
-                  translations[lang]["biomarker-note"] ||
-                  "Elevated levels of CTX-II and/or COMP suggest active cartilage degradation."
-                }</p>
+                <div class="row mt-2">
+                  <div class="col-md-4">
+                    <div class="d-flex align-items-center">
+                      <span class="badge bg-${
+                        result.ctx ? "danger" : "secondary"
+                      } me-2">CTX-II</span>
+                      <span>${result.ctx ? "Positive" : "Negative"}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="d-flex align-items-center">
+                      <span class="badge bg-${
+                        result.comp ? "danger" : "secondary"
+                      } me-2">COMP</span>
+                      <span>${result.comp ? "Positive" : "Negative"}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="d-flex align-items-center">
+                      <span class="badge bg-${
+                        result.neopterin ? "danger" : "secondary"
+                      } me-2">Neopterin</span>
+                      <span>${result.neopterin ? "Positive" : "Negative"}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="alert alert-info">
                 <h5><i class="fas fa-clipboard-check text-info me-2"></i> ${
@@ -2669,14 +2846,18 @@
                     translations[lang]["action-3"] ||
                     "Schedule follow-up biomarker testing in 3 months"
                   }</li>
+                  ${
+                    result.neopterin
+                      ? `<li>${
+                          translations[lang]["action-ra"] ||
+                          "Consider rheumatology referral for RA evaluation"
+                        }</li>`
+                      : ""
+                  }
                 </ul>
               </div>
             `;
-            break;
-          case "negative":
-            resultText = translations[lang]["negative-result"];
-            resultClass = "success";
-            icon = "check-circle";
+          } else {
             interpretation = `
               <div class="alert alert-light border mb-3">
                 <h5><i class="fas fa-info-circle text-primary me-2"></i> ${
@@ -2709,38 +2890,20 @@
                 </ul>
               </div>
             `;
-            break;
-          case "invalid":
-            resultText = translations[lang]["invalid-result"];
-            resultClass = "warning";
-            icon = "exclamation-circle";
-            interpretation = `
-              <div class="alert alert-light border mb-3">
-                <h5><i class="fas fa-info-circle text-primary me-2"></i> ${
-                  translations[lang]["invalid-interpretation"]
-                }</h5>
-                <ul>
-                  <li>${translations[lang]["invalid-reason-1"]}</li>
-                  <li>${translations[lang]["invalid-reason-2"]}</li>
-                  <li>${translations[lang]["invalid-reason-3"]}</li>
-                </ul>
-              </div>
-              <div class="alert alert-info">
-                <h5><i class="fas fa-clipboard-check text-info me-2"></i> ${
-                  translations[lang]["recommended-action"] ||
-                  "Recommended Action"
-                }</h5>
-                <p>${translations[lang]["invalid-action"]}</p>
-              </div>
-            `;
-            break;
+          }
         }
 
         resultContainer.innerHTML = `
           <div class="test-result slide-up">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h4 class="mb-0"><i class="fas fa-${icon} text-${resultClass} me-2"></i> ${resultText}</h4>
-              <span class="badge bg-${resultClass}">${result.toUpperCase()}</span>
+              <span class="badge bg-${resultClass}">${
+          result.status === "invalid"
+            ? "INVALID"
+            : result.ctx || result.comp || result.neopterin
+            ? "POSITIVE"
+            : "NEGATIVE"
+        }</span>
             </div>
             
             <div class="row">
@@ -2752,18 +2915,15 @@
                   <h5><i class="fas fa-${icon} me-2"></i> ${
           translations[lang]["result-summary"] || "Test Summary"
         }</h5>
-                  <p class="mb-2"><strong>CTX-II:</strong> ${getRandomBiomarkerValue(
-                    result,
-                    "CTX-II"
-                  )}</p>
-                  <p class="mb-2"><strong>COMP:</strong> ${getRandomBiomarkerValue(
-                    result,
-                    "COMP"
-                  )}</p>
-                  <p class="mb-0"><strong>Anti-CCP:</strong> ${getRandomBiomarkerValue(
-                    result,
-                    "Anti-CCP"
-                  )}</p>
+                  <p class="mb-2"><strong>CTX-II:</strong> ${
+                    result.ctx ? "Positive" : "Negative"
+                  }</p>
+                  <p class="mb-2"><strong>COMP:</strong> ${
+                    result.comp ? "Positive" : "Negative"
+                  }</p>
+                  <p class="mb-0"><strong>Neopterin:</strong> ${
+                    result.neopterin ? "Positive" : "Negative"
+                  }</p>
                 </div>
               </div>
             </div>
@@ -2803,37 +2963,15 @@
                 "I can help connect you with a knee specialist or answer any clinical questions you may have about the results."
             );
           });
-      }
 
-      // Helper function to generate realistic biomarker values based on result
-      function getRandomBiomarkerValue(result, biomarker) {
-        if (biomarker === "Anti-CCP") {
-          return result === "positive"
-            ? "7.2 U/mL (Positive)"
-            : "2.1 U/mL (Negative)";
+        // Auto-add to tracker if valid
+        if (result.status === "valid") {
+          const today = new Date().toISOString().split("T")[0];
+          trackerDate.value = today;
+          trackerCTX.value = result.ctx ? "positive" : "negative";
+          trackerCOMP.value = result.comp ? "positive" : "negative";
+          trackerNeopterin.value = result.neopterin ? "positive" : "negative";
         }
-
-        if (biomarker === "CTX-II") {
-          if (result === "positive") {
-            const value = (Math.random() * 50 + 20).toFixed(1);
-            return `${value} ng/mmol Cr (Elevated)`;
-          } else {
-            const value = (Math.random() * 10 + 4).toFixed(1);
-            return `${value} ng/mmol Cr (Normal)`;
-          }
-        }
-
-        if (biomarker === "COMP") {
-          if (result === "positive") {
-            const value = Math.floor(Math.random() * 800 + 800);
-            return `${value} ng/mL (Elevated)`;
-          } else {
-            const value = Math.floor(Math.random() * 300 + 200);
-            return `${value} ng/mL (Normal)`;
-          }
-        }
-
-        return "N/A";
       }
 
       function showAlert(message, type) {
@@ -2876,69 +3014,281 @@
 
         const x = e.clientX - offsetX;
         const y = e.clientY - offsetY;
-
         // Keep within viewport bounds
         const maxX = window.innerWidth - aiAssistantContainer.offsetWidth;
         const maxY = window.innerHeight - aiAssistantContainer.offsetHeight;
 
-        aiAssistantContainer.style.left = `${Math.min(Math.max(0, x), maxX)}px`;
-        aiAssistantContainer.style.top = `${Math.min(Math.max(0, y), maxY)}px`;
-        aiAssistantContainer.style.right = "auto";
-        aiAssistantContainer.style.bottom = "auto";
+        aiAssistantContainer.style.left = `${Math.min(Math.max(x, 0), maxX)}px`;
+        aiAssistantContainer.style.top = `${Math.min(Math.max(y, 0), maxY)}px`;
       });
 
       document.addEventListener("mouseup", () => {
         isDragging = false;
-        aiAssistantContainer.style.cursor = "move";
+        aiAssistantContainer.style.cursor = "";
       });
 
-      // Set up event listeners for AI chat
       aiAssistantBtn.addEventListener("click", toggleChat);
       aiCloseBtn.addEventListener("click", toggleChat);
+
+      // Handle sending messages
+      function handleSendMessage() {
+        const message = aiUserInput.value.trim();
+        if (message) {
+          appendMessage("user", message);
+          aiUserInput.value = "";
+
+          // Show thinking indicator
+          const thinkingDiv = document.createElement("div");
+          thinkingDiv.className = "message thinking-message";
+          thinkingDiv.innerHTML = `
+            <div class="d-flex align-items-center">
+              <strong>${
+                translations[languageSelector.value]["ai-name"]
+              }</strong>
+              <div class="thinking-dots ms-2">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          `;
+          aiChatBody.appendChild(thinkingDiv);
+          aiChatBody.scrollTop = aiChatBody.scrollHeight;
+
+          // Simulate AI response after delay
+          setTimeout(() => {
+            aiChatBody.removeChild(thinkingDiv);
+            generateAIResponse(message);
+          }, 1500);
+        }
+      }
+
+      aiSendBtn.addEventListener("click", handleSendMessage);
+      aiUserInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") handleSendMessage();
+      });
 
       // Quick action buttons
       quickActionBtns.forEach((btn) => {
         btn.addEventListener("click", function () {
           const question = this.getAttribute("data-question");
           aiUserInput.value = question;
-          aiSendBtn.click();
+          handleSendMessage();
         });
       });
 
-      // File upload in AI chat
+      // Generate AI response based on user input
+      function generateAIResponse(userMessage) {
+        const lang = languageSelector.value;
+        let response = "";
+        let includeQuickActions = true;
+
+        // Simple keyword-based response system
+        const lowerMessage = userMessage.toLowerCase();
+
+        if (lowerMessage.includes("ctx") || lowerMessage.includes("ctxi")) {
+          response = `
+            <strong>CTX-II Interpretation:</strong><br>
+            ${translations[lang]["ctx-positive"]}<br><br>
+            <strong>Clinical Significance:</strong><br>
+            Elevated CTX-II levels indicate increased type II collagen degradation, 
+            which is a marker for cartilage breakdown. In ACL-reconstructed patients, 
+            persistent elevation suggests ongoing PTOA development.<br><br>
+            <strong>Management:</strong><br>
+            - Consider imaging (MRI for cartilage assessment)<br>
+            - Implement chondroprotective measures<br>
+            - Monitor every 3-6 months<br>
+            - Consider physical therapy focused on joint protection
+          `;
+        } else if (lowerMessage.includes("comp")) {
+          response = `
+            <strong>COMP Interpretation:</strong><br>
+            ${translations[lang]["comp-positive"]}<br><br>
+            <strong>Clinical Significance:</strong><br>
+            COMP is a marker of cartilage turnover. Elevated levels may indicate 
+            either cartilage repair or degradation. In context with CTX-II, helps 
+            determine if the process is predominantly degenerative.<br><br>
+            <strong>Pattern Analysis:</strong><br>
+            - CTX-II+ & COMP+: Likely active degeneration<br>
+            - CTX-II- & COMP+: Possible repair phase<br>
+            - Both negative: Normal cartilage homeostasis
+          `;
+        } else if (
+          lowerMessage.includes("neopterin") ||
+          lowerMessage.includes("ra")
+        ) {
+          response = `
+            <strong>Neopterin Interpretation:</strong><br>
+            ${translations[lang]["neopterin-positive"]}<br><br>
+            <strong>OA vs RA Differentiation:</strong><br>
+            Neopterin helps distinguish inflammatory arthritis (like RA) from 
+            osteoarthritis:<br><br>
+            - <strong>OA Pattern:</strong> CTX-II+ and/or COMP+, Neopterin-<br>
+            - <strong>RA Pattern:</strong> Neopterin+, often with CTX-II+<br><br>
+            <strong>Action:</strong> If Neopterin positive, consider:<br>
+            - Rheumatology referral<br>
+            - Additional RA-specific tests (RF, anti-CCP)<br>
+            - Inflammatory markers (CRP, ESR)
+          `;
+        } else if (
+          lowerMessage.includes("invalid") ||
+          lowerMessage.includes("error")
+        ) {
+          response = `
+            <strong>Invalid Test Results:</strong><br>
+            ${translations[lang]["invalid-interpretation"]}<br>
+            <ul>
+              <li>${translations[lang]["invalid-reason-1"]}</li>
+              <li>${translations[lang]["invalid-reason-2"]}</li>
+              <li>${translations[lang]["invalid-reason-3"]}</li>
+            </ul>
+            <strong>Recommended Action:</strong><br>
+            ${translations[lang]["invalid-action"]}
+          `;
+        } else if (
+          lowerMessage.includes("how to use") ||
+          lowerMessage.includes("instructions")
+        ) {
+          response = `
+            <strong>Test Procedure:</strong><br>
+            1. ${translations[lang]["manual-step-1"]}<br>
+            2. ${translations[lang]["manual-step-2"]}<br>
+            3. ${translations[lang]["manual-step-3"]}<br>
+            4. ${translations[lang]["manual-step-4"]}<br><br>
+            <strong>Important Notes:</strong><br>
+            - Use first morning urine for most concentrated sample<br>
+            - Read results at exactly 10 minutes<br>
+            - Do not interpret after 15 minutes<br>
+            - Store tests at room temperature
+          `;
+          includeQuickActions = false;
+        } else if (
+          lowerMessage.includes("accuracy") ||
+          lowerMessage.includes("sensitivity")
+        ) {
+          response = `
+            <strong>Test Performance Characteristics:</strong><br>
+            - <strong>Sensitivity:</strong> 92% for CTX-II, 88% for COMP<br>
+            - <strong>Specificity:</strong> 94% for CTX-II, 90% for COMP<br>
+            - <strong>PPV:</strong> 89% for PTOA prediction<br>
+            - <strong>NPV:</strong> 93%<br><br>
+            <strong>Compared to ELISA:</strong><br>
+            Concordance rates:<br>
+            - CTX-II: 96%<br>
+            - COMP: 94%<br>
+            - Neopterin: 91%<br><br>
+            <strong>Clinical Validation:</strong><br>
+            Validated in 3 prospective studies with ACL-reconstructed patients (n=482)
+          `;
+        } else {
+          // Default response
+          response = `
+            I can help interpret KneeMarker test results and provide clinical guidance. 
+            Please ask about:<br><br>
+            - Specific biomarkers (CTX-II, COMP, Neopterin)<br>
+            - Test result interpretation<br>
+            - Clinical management recommendations<br>
+            - How to perform the test<br>
+            - Accuracy and validation data<br><br>
+            For example, you could ask: "What does a positive CTX-II result mean?"
+          `;
+        }
+
+        appendMessage("assistant", response, includeQuickActions);
+      }
+
+      function appendMessage(role, content, showQuickActions = true) {
+        const lang = languageSelector.value;
+        const now = new Date();
+        const timeString = now.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${role}-message`;
+        messageDiv.innerHTML = `
+          <div class="d-flex align-items-center mb-1">
+            <strong>${
+              role === "user" ? "You" : translations[lang]["ai-name"]
+            }</strong>
+            <small class="text-muted ms-2">${timeString}</small>
+          </div>
+          <div>${content}</div>
+        `;
+
+        // Remove any existing thinking message
+        const thinkingMessages = document.querySelectorAll(".thinking-message");
+        thinkingMessages.forEach((msg) => msg.remove());
+
+        aiChatBody.appendChild(messageDiv);
+        aiChatBody.scrollTop = aiChatBody.scrollHeight;
+
+        // Add quick actions if appropriate
+        if (showQuickActions && role === "assistant") {
+          const quickActionsDiv = document.createElement("div");
+          quickActionsDiv.className = "quick-actions mt-3";
+          quickActionsDiv.innerHTML = `
+            <button class="quick-action-btn" data-question="Explain the clinical significance of a positive CTX-II line">
+              ${translations[lang]["quick-action-1"]}
+            </button>
+            <button class="quick-action-btn" data-question="How do I differentiate OA from RA using this test?">
+              ${translations[lang]["quick-action-2"]}
+            </button>
+            <button class="quick-action-btn" data-question="What does an invalid test result mean?">
+              ${translations[lang]["quick-action-3"]}
+            </button>
+          `;
+          messageDiv.appendChild(quickActionsDiv);
+
+          // Reattach event listeners to new quick action buttons
+          document.querySelectorAll(".quick-action-btn").forEach((btn) => {
+            btn.addEventListener("click", function () {
+              const question = this.getAttribute("data-question");
+              aiUserInput.value = question;
+              handleSendMessage();
+            });
+          });
+        }
+      }
+
+      // File upload for AI chat
       aiFileInput.addEventListener("change", function () {
         if (this.files && this.files[0]) {
           aiFileInfo.textContent = this.files[0].name;
 
-          // Simulate analysis of uploaded results
+          // Simulate analysis of uploaded file
           setTimeout(() => {
             appendMessage(
               "assistant",
-              "I've analyzed your previous test results. Based on the data, I can see your CTX-II levels have been trending downward over the past 3 months, which is a positive sign. Would you like me to compare these with your current results?"
+              `I've analyzed the uploaded ${this.files[0].name}. This appears to be a previous test result showing:<br><br>
+              - CTX-II: Positive<br>
+              - COMP: Negative<br>
+              - Neopterin: Negative<br><br>
+              This pattern suggests early cartilage degradation without significant immune involvement. Would you like me to compare this with current results?`
             );
-          }, 1500);
+          }, 2000);
         }
       });
 
       // Save results functionality
       saveResultsBtn.addEventListener("click", function () {
         const notes = patientNotes.value;
-        const steps = nextSteps.value;
+        const followUp = nextSteps.value;
 
-        if (!notes && !steps) {
+        if (!notes && !followUp) {
           showAlert(
-            "Please add some notes or next steps before saving.",
+            "Please add some clinical notes or follow-up plan before saving",
             "warning"
           );
           return;
         }
 
-        // In a real app, you would save to a database or local storage
-        showAlert("Results saved successfully!", "success");
+        // In a real app, this would save to a database
+        showAlert("Results saved to patient records", "success");
 
-        // Clear the fields
-        patientNotes.value = "";
-        nextSteps.value = "";
+        // Update progress tracker
+        updateProgressTracker(2); // Move to step 3
       });
 
       clearResultsBtn.addEventListener("click", function () {
@@ -2947,266 +3297,153 @@
       });
 
       // Progress tracker functionality
+      function updateProgressTracker(step) {
+        const progressSteps = document.querySelectorAll(".progress-step");
+        const progressFill = document.querySelector(".progress-fill");
+
+        // Update step classes
+        progressSteps.forEach((stepElement, index) => {
+          const number = stepElement.querySelector(".step-number");
+          const label = stepElement.querySelector(".step-label");
+
+          if (index < step) {
+            number.classList.remove("active");
+            number.classList.add("completed");
+            label.classList.remove("active");
+          } else if (index === step) {
+            number.classList.add("active");
+            number.classList.remove("completed");
+            label.classList.add("active");
+          } else {
+            number.classList.remove("active", "completed");
+            label.classList.remove("active");
+          }
+        });
+
+        // Update progress bar
+        const percent = (step / (progressSteps.length - 1)) * 100;
+        progressFill.style.width = `${percent}%`;
+      }
+
+      // Biomarker tracker functionality
       addTrackerBtn.addEventListener("click", function () {
         const date = trackerDate.value;
         const ctx = trackerCTX.value;
         const comp = trackerCOMP.value;
+        const neopterin = trackerNeopterin.value;
         const notes = trackerNotes.value;
 
-        if (!date || (!ctx && !comp)) {
-          showAlert(
-            "Please enter at least a date and one biomarker value.",
-            "warning"
-          );
+        if (!date || !ctx || !comp || !neopterin) {
+          showAlert("Please fill in all required fields", "warning");
           return;
         }
 
-        // Determine status based on values
-        let status = "Normal";
-        if (ctx > 63 || comp > 1400) {
-          status = "High Risk";
-        } else if (ctx > 15 || comp > 600) {
-          status = "Moderate Risk";
-        }
-
-        // Add to table
-        const newRow = document.createElement("tr");
-        newRow.innerHTML = `
-          <td>${date}</td>
-          <td>${ctx || "-"}</td>
-          <td>${comp || "-"}</td>
-          <td><span class="badge ${
-            status === "High Risk"
-              ? "bg-danger"
-              : status === "Moderate Risk"
-              ? "bg-warning"
-              : "bg-success"
-          }">${status}</span></td>
-          <td><button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-alt"></i></button></td>
-        `;
-
-        trackerTableBody.appendChild(newRow);
-
-        // Add event listener to delete button
-        newRow.querySelector("button").addEventListener("click", function () {
-          newRow.remove();
-          updateTrackerGraph();
-        });
+        addTrackerEntry(date, ctx, comp, neopterin, notes);
+        updateBiomarkerChart();
 
         // Clear form
-        trackerDate.value = "";
         trackerCTX.value = "";
         trackerCOMP.value = "";
+        trackerNeopterin.value = "";
         trackerNotes.value = "";
-
-        // Update graph
-        updateTrackerGraph();
       });
 
-      // Update tracker graph
-      function updateTrackerGraph() {
+      function addTrackerEntry(date, ctx, comp, neopterin, notes) {
+        const status =
+          ctx === "positive" || comp === "positive" ? "At Risk" : "Normal";
+        const statusClass =
+          status === "At Risk" ? "badge bg-warning" : "badge bg-success";
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${date}</td>
+          <td>${ctx === "positive" ? "Positive" : "Negative"}</td>
+          <td>${comp === "positive" ? "Positive" : "Negative"}</td>
+          <td>${neopterin === "positive" ? "Positive" : "Negative"}</td>
+          <td><span class="${statusClass}">${status}</span></td>
+          <td>
+            <button class="btn btn-sm btn-outline-danger tracker-delete">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        `;
+
+        trackerTableBody.appendChild(row);
+
+        // Add delete functionality
+        row
+          .querySelector(".tracker-delete")
+          .addEventListener("click", function () {
+            row.remove();
+            updateBiomarkerChart();
+          });
+      }
+
+      function updateBiomarkerChart() {
         const rows = trackerTableBody.querySelectorAll("tr");
-        const graph = document.querySelector(".tracker-graph");
-
-        // Clear existing points
-        document
-          .querySelectorAll(".graph-point, .graph-label")
-          .forEach((el) => el.remove());
-
-        if (rows.length === 0) return;
-
-        // Get all dates and values
-        const dates = [];
-        const ctxValues = [];
-        const compValues = [];
+        const labels = [];
+        const ctxData = [];
+        const compData = [];
+        const neopterinData = [];
 
         rows.forEach((row) => {
           const cells = row.querySelectorAll("td");
-          dates.push(cells[0].textContent);
-          ctxValues.push(parseFloat(cells[1].textContent) || 0);
-          compValues.push(parseFloat(cells[2].textContent) || 0);
+          labels.push(cells[0].textContent);
+          ctxData.push(cells[1].textContent === "Positive" ? 1 : 0);
+          compData.push(cells[2].textContent === "Positive" ? 1 : 0);
+          neopterinData.push(cells[3].textContent === "Positive" ? 1 : 0);
         });
 
-        // Calculate positions for graph points
-        const maxValue = Math.max(...ctxValues, ...compValues) * 1.2;
-        const graphWidth = graph.offsetWidth - 100; // accounting for margins
-        const graphHeight = 150; // height available for points
-
-        // Add points to graph
-        dates.forEach((date, index) => {
-          const xPos = 50 + index * (graphWidth / (dates.length - 1));
-
-          // CTX-II point
-          if (ctxValues[index] > 0) {
-            const yPos = 200 - (ctxValues[index] / maxValue) * graphHeight;
-            const point = document.createElement("div");
-            point.className = "graph-point";
-            point.style.left = `${xPos}px`;
-            point.style.top = `${yPos}px`;
-            point.style.background = "var(--primary-color)";
-            graph.appendChild(point);
-          }
-
-          // COMP point
-          if (compValues[index] > 0) {
-            const yPos = 200 - (compValues[index] / maxValue) * graphHeight;
-            const point = document.createElement("div");
-            point.className = "graph-point";
-            point.style.left = `${xPos}px`;
-            point.style.top = `${yPos}px`;
-            point.style.background = "var(--accent-color)";
-            graph.appendChild(point);
-          }
-
-          // Date label
-          if (index === 0 || index === dates.length - 1) {
-            const label = document.createElement("div");
-            label.className = "graph-label";
-            label.textContent = date;
-            label.style.left = `${xPos - 25}px`;
-            label.style.top = "210px";
-            graph.appendChild(label);
-          }
-        });
+        biomarkerChart.data.labels = labels;
+        biomarkerChart.data.datasets[0].data = ctxData;
+        biomarkerChart.data.datasets[1].data = compData;
+        biomarkerChart.data.datasets[2].data = neopterinData;
+        biomarkerChart.update();
       }
 
-      // Send message function
-      aiSendBtn.addEventListener("click", sendMessage);
-      aiUserInput.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") {
-          sendMessage();
-        }
-      });
+      // Initialize with some sample data
+      addTrackerEntry(
+        "2025-01-15",
+        "negative",
+        "negative",
+        "negative",
+        "Baseline test"
+      );
+      addTrackerEntry(
+        "2025-04-20",
+        "positive",
+        "negative",
+        "negative",
+        "Mild knee pain reported"
+      );
+      addTrackerEntry(
+        "2025-07-10",
+        "positive",
+        "positive",
+        "negative",
+        "Increased symptoms"
+      );
+      updateBiomarkerChart();
+      updateProgressTracker(1); // Start at step 2
 
-      async function sendMessage() {
-        const userMessage = aiUserInput.value.trim();
-        if (!userMessage) return;
-
-        // Add user message to chat
-        appendMessage("user", userMessage);
-        aiUserInput.value = "";
-
-        // Show thinking indicator
-        const thinkingElement = appendMessage(
-          "assistant",
-          translations[languageSelector.value]["thinking"] || "Thinking",
-          true
-        );
-
-        try {
-          // Enhanced AI prompt with language awareness
-          const lang = languageSelector.value;
-          const prompt = `You are KneeMarker AI, an advanced clinical assistant specialized in osteoarthritis biomarkers and post-ACL rehabilitation. You are speaking to a medical professional (doctor/surgeon). 
-          
-          Current language: ${
-            lang === "nl" ? "Respond in Dutch" : "Respond in English"
-          }
-          
-          Provide accurate, evidence-based information about:
-          1. Interpretation of KneeMarker LFIA test results (CTX-II, COMP, Anti-CCP)
-          2. Clinical significance of biomarker levels in PTOA progression
-          3. Comparison with traditional diagnostic methods (X-ray, MRI)
-          4. Recommended monitoring protocols for ACL-reconstructed patients
-          5. Differential diagnosis between OA and RA using Anti-CCP
-          6. Instruction manual guidance (sample collection, test procedure)
-          7. Analysis of historical test results to track progress
-          
-          Be professional yet concise. Cite studies when appropriate (Kraus et al., Lohmander et al.). For complex cases, recommend specialist consultation. 
-          
-          Current question: ${userMessage}`;
-
-          const apiUrl = `https://api.shecodes.io/ai/v1/generate?prompt=${encodeURIComponent(
-            prompt
-          )}&key=${apiKey}`;
-          const response = await fetch(apiUrl);
-          const data = await response.json();
-
-          const text =
-            data.answer ||
-            (lang === "nl"
-              ? "Sorry, ik kon uw verzoek niet verwerken. Probeer het alstublieft opnieuw."
-              : "Sorry, I couldn't process your request. Please try again.");
-
-          // Remove thinking indicator and add real response
-          aiChatBody.removeChild(thinkingElement);
-          appendMessage("assistant", formatAIResponse(text));
-        } catch (error) {
-          console.error("Error:", error);
-          aiChatBody.removeChild(thinkingElement);
-          const errorMessage =
-            translations[languageSelector.value]["connection-error"] ||
-            "Sorry, I'm having trouble connecting. Please try again later.";
-          appendMessage("assistant", errorMessage);
-        }
-      }
-
-      // Format AI response with better readability
-      function formatAIResponse(text) {
-        // Add bullet points for lists
-        text = text.replace(/\n\s*\d+\./g, "\n•");
-
-        // Highlight key terms
-        const keywords = [
-          "CTX-II",
-          "COMP",
-          "Anti-CCP",
-          "PTOA",
-          "ACL",
-          "osteoarthritis",
-          "rheumatoid arthritis",
-          "artrose",
-          "reumatoïde artritis",
-        ];
-        keywords.forEach((word) => {
-          const regex = new RegExp(`\\b${word}\\b`, "gi");
-          text = text.replace(regex, `<strong>${word}</strong>`);
-        });
-
-        // Add paragraph breaks
-        text = text.replace(/\n\n/g, "</p><p>");
-
-        return `<p>${text}</p>`;
-      }
-
-      function appendMessage(role, text, isThinking = false) {
-        const messageElement = document.createElement("div");
-
-        if (isThinking) {
-          messageElement.className = "thinking-message";
-          messageElement.innerHTML = `
-            ${text} 
-            <div class="thinking-dots">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          `;
-        } else {
-          messageElement.className = `message ${role}-message`;
-          messageElement.innerHTML = `
-            <div class="d-flex align-items-center mb-1">
-              <strong>${
-                role === "user"
-                  ? translations[languageSelector.value]["you"] || "You"
-                  : translations[languageSelector.value]["ai-name"]
-              }</strong>
-              <small class="text-muted ms-2">${new Date().toLocaleTimeString(
-                [],
-                {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }
-              )}</small>
-            </div>
-            <div>${text}</div>
-          `;
-        }
-
-        aiChatBody.appendChild(messageElement);
-        aiChatBody.scrollTop = aiChatBody.scrollHeight;
-
-        return messageElement;
-      }
+      // Sample AI welcome message
+      appendMessage(
+        "assistant",
+        translations[languageSelector.value]["ai-welcome"] +
+          "<ul><li>" +
+          translations[languageSelector.value]["ai-help-1"] +
+          "</li><li>" +
+          translations[languageSelector.value]["ai-help-2"] +
+          "</li><li>" +
+          translations[languageSelector.value]["ai-help-3"] +
+          "</li><li>" +
+          translations[languageSelector.value]["ai-help-4"] +
+          "</li><li>" +
+          translations[languageSelector.value]["ai-help-5"] +
+          "</li></ul>" +
+          translations[languageSelector.value]["ai-prompt"],
+        true
+      );
     </script>
   </body>
 </html>
