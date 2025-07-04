@@ -231,7 +231,6 @@
         transform-origin: bottom right;
         animation: fadeIn 0.3s ease-out;
         border: 1px solid rgba(0, 0, 0, 0.1);
-        cursor: move;
       }
 
       @keyframes fadeIn {
@@ -258,7 +257,6 @@
         justify-content: space-between;
         align-items: center;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        cursor: move;
       }
 
       .ai-chat-header h5 {
@@ -1969,67 +1967,13 @@
           <i class="fas fa-robot me-2"></i>
           <span data-lang="ai-title">KneeMarker Clinical Assistant</span>
         </h5>
-        <button class="ai-close-btn" id="ai-close-btn">
+        <button class="ai-close-btn">
           <i class="fas fa-times"></i>
         </button>
       </div>
-
       <div class="ai-chat-body" id="ai-chat-body">
         <!-- Messages will appear here -->
-        <div class="message assistant-message">
-          <div class="d-flex align-items-center mb-1">
-            <strong data-lang="ai-name">KneeMarker AI</strong>
-            <small class="text-muted ms-2">Today</small>
-          </div>
-          <div data-lang="ai-welcome">
-            Hello! I'm your KneeMarker clinical assistant. I can help with:
-          </div>
-          <ul>
-            <li data-lang="ai-help-1">
-              Interpreting test results and biomarker patterns
-            </li>
-            <li data-lang="ai-help-2">
-              Explaining the LFIA technology behind KneeMarker
-            </li>
-            <li data-lang="ai-help-3">
-              Clinical insights on PTOA progression post-ACL
-            </li>
-            <li data-lang="ai-help-4">
-              Guidance on patient management protocols
-            </li>
-            <li data-lang="ai-help-5">Instruction manual guidance</li>
-            <li>Analyzing historical test trends</li>
-          </ul>
-          <div class="mt-2" data-lang="ai-prompt">
-            How can I assist you today?
-          </div>
-        </div>
-
-        <div class="quick-actions mt-3">
-          <button
-            class="quick-action-btn"
-            data-question="Explain the clinical significance of a positive CTX-II line"
-            data-lang="quick-action-1"
-          >
-            CTX-II Significance
-          </button>
-          <button
-            class="quick-action-btn"
-            data-question="How do I differentiate OA from RA using this test?"
-            data-lang="quick-action-2"
-          >
-            OA vs RA
-          </button>
-          <button
-            class="quick-action-btn"
-            data-question="What does an invalid test result mean?"
-            data-lang="quick-action-3"
-          >
-            Invalid Results
-          </button>
-        </div>
       </div>
-
       <div class="ai-chat-input">
         <div class="ai-file-upload">
           <label for="ai-file-input">
@@ -2063,7 +2007,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- AOS Animation Library -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <!-- SheCodes API Key -->
     <script>
       // SheCodes API Key
       const apiKey = "tf315a00255a026o44c386706557b731";
@@ -2411,11 +2354,10 @@
       const aiAssistantContainer = document.getElementById(
         "ai-assistant-container"
       );
-      const aiCloseBtn = document.getElementById("ai-close-btn");
+      const aiCloseBtn = document.querySelector(".ai-close-btn");
       const aiChatBody = document.getElementById("ai-chat-body");
       const aiUserInput = document.getElementById("ai-user-input");
       const aiSendBtn = document.getElementById("ai-send-btn");
-      const quickActionBtns = document.querySelectorAll(".quick-action-btn");
       const saveResultsSection = document.getElementById("saveResultsSection");
       const saveResultsBtn = document.getElementById("saveResultsBtn");
       const clearResultsBtn = document.getElementById("clearResultsBtn");
@@ -2529,6 +2471,7 @@
       languageSelector.addEventListener("change", function () {
         const lang = this.value;
         updateLanguage(lang);
+        initializeChat(); // Reinitialize chat in new language
       });
 
       // Upload area functionality
@@ -2540,15 +2483,15 @@
           const fileUrl = URL.createObjectURL(this.files[0]);
 
           uploadArea.innerHTML = `
-          <button class="clear-upload" onclick="clearUpload()">
-            <i class="fas fa-times"></i>
-          </button>
-          <img src="${fileUrl}" class="img-fluid mb-2" style="max-height: 150px;">
-          <h5>${fileName}</h5>
-          <p class="text-muted">${
-            translations[languageSelector.value]["or-text"]
-          }</p>
-        `;
+              <button class="clear-upload" onclick="clearUpload()">
+                  <i class="fas fa-times"></i>
+              </button>
+              <img src="${fileUrl}" class="img-fluid mb-2" style="max-height: 150px;">
+              <h5>${fileName}</h5>
+              <p class="text-muted">${
+                translations[languageSelector.value]["or-text"]
+              }</p>
+              `;
         }
       });
 
@@ -2556,14 +2499,14 @@
       window.clearUpload = function () {
         fileInput.value = "";
         uploadArea.innerHTML = `
-        <i class="fas fa-cloud-upload-alt fa-4x mb-3" style="color: var(--primary-color);"></i>
-        <h5 data-lang="upload-text">${
-          translations[languageSelector.value]["upload-text"]
-        }</h5>
-        <p class="text-muted" data-lang="or-text">${
-          translations[languageSelector.value]["or-text"]
-        }</p>
-      `;
+          <i class="fas fa-cloud-upload-alt fa-4x mb-3" style="color: var(--primary-color);"></i>
+          <h5 data-lang="upload-text">${
+            translations[languageSelector.value]["upload-text"]
+          }</h5>
+          <p class="text-muted" data-lang="or-text">${
+            translations[languageSelector.value]["or-text"]
+          }</p>
+          `;
         updateLanguage(languageSelector.value);
       };
 
@@ -2620,19 +2563,19 @@
         const lang = languageSelector.value;
 
         resultContainer.innerHTML = `
-        <div class="d-flex justify-content-center align-items-center py-4">
-          <div class="spinner-border text-primary me-3" role="status" style="width: 3rem; height: 3rem;">
-            <span class="visually-hidden">Loading...</span>
+          <div class="d-flex justify-content-center align-items-center py-4">
+              <div class="spinner-border text-primary me-3" role="status" style="width: 3rem; height: 3rem;">
+                  <span class="visually-hidden">Loading...</span>
+              </div>
+              <div>
+                  <h5 class="mb-1">${translations[lang]["analyzing"]}</h5>
+                  <p class="text-muted mb-0">${
+                    translations[lang]["processing-note"] ||
+                    "Processing test strip image..."
+                  }</p>
+              </div>
           </div>
-          <div>
-            <h5 class="mb-1">${translations[lang]["analyzing"]}</h5>
-            <p class="text-muted mb-0">${
-              translations[lang]["processing-note"] ||
-              "Processing test strip image..."
-            }</p>
-          </div>
-        </div>
-      `;
+          `;
 
         // Simulate analysis with actual image processing
         setTimeout(() => {
@@ -2768,23 +2711,24 @@
           resultClass = "warning";
           icon = "exclamation-circle";
           interpretation = `
-            <div class="alert alert-light border mb-3">
-              <h5><i class="fas fa-info-circle text-primary me-2"></i> ${
-                translations[lang]["invalid-interpretation"]
-              }</h5>
-              <ul>
-                <li>${translations[lang]["invalid-reason-1"]}</li>
-                <li>${translations[lang]["invalid-reason-2"]}</li>
-                <li>${translations[lang]["invalid-reason-3"]}</li>
-              </ul>
-            </div>
-            <div class="alert alert-info">
-              <h5><i class="fas fa-clipboard-check text-info me-2"></i> ${
-                translations[lang]["recommended-action"] || "Recommended Action"
-              }</h5>
-              <p>${translations[lang]["invalid-action"]}</p>
-            </div>
-          `;
+                  <div class="alert alert-light border mb-3">
+                      <h5><i class="fas fa-info-circle text-primary me-2"></i> ${
+                        translations[lang]["invalid-interpretation"]
+                      }</h5>
+                      <ul>
+                          <li>${translations[lang]["invalid-reason-1"]}</li>
+                          <li>${translations[lang]["invalid-reason-2"]}</li>
+                          <li>${translations[lang]["invalid-reason-3"]}</li>
+                      </ul>
+                  </div>
+                  <div class="alert alert-info">
+                      <h5><i class="fas fa-clipboard-check text-info me-2"></i> ${
+                        translations[lang]["recommended-action"] ||
+                        "Recommended Action"
+                      }</h5>
+                      <p>${translations[lang]["invalid-action"]}</p>
+                  </div>
+              `;
         } else {
           // Valid test - determine if positive or negative
           const isPositive = result.ctx || result.comp || result.neopterin;
@@ -2796,159 +2740,169 @@
 
           if (isPositive) {
             interpretation = `
-              <div class="alert alert-light border mb-3">
-                <h5><i class="fas fa-info-circle text-primary me-2"></i> ${
-                  translations[lang]["positive-interpretation"]
-                }</h5>
-                <div class="row mt-2">
-                  <div class="col-md-4">
-                    <div class="d-flex align-items-center">
-                      <span class="badge bg-${
-                        result.ctx ? "danger" : "secondary"
-                      } me-2">CTX-II</span>
-                      <span>${result.ctx ? "Positive" : "Negative"}</span>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="d-flex align-items-center">
-                      <span class="badge bg-${
-                        result.comp ? "danger" : "secondary"
-                      } me-2">COMP</span>
-                      <span>${result.comp ? "Positive" : "Negative"}</span>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="d-flex align-items-center">
-                      <span class="badge bg-${
-                        result.neopterin ? "danger" : "secondary"
-                      } me-2">Neopterin</span>
-                      <span>${result.neopterin ? "Positive" : "Negative"}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="alert alert-info">
-                <h5><i class="fas fa-clipboard-check text-info me-2"></i> ${
-                  translations[lang]["recommended-action"] ||
-                  "Recommended Clinical Action"
-                }</h5>
-                <p>${translations[lang]["positive-action"]}</p>
-                <ul class="mb-0">
-                  <li>${
-                    translations[lang]["action-1"] ||
-                    "Consider radiographic evaluation (X-ray/MRI)"
-                  }</li>
-                  <li>${
-                    translations[lang]["action-2"] ||
-                    "Implement physical therapy regimen"
-                  }</li>
-                  <li>${
-                    translations[lang]["action-3"] ||
-                    "Schedule follow-up biomarker testing in 3 months"
-                  }</li>
-                  ${
-                    result.neopterin
-                      ? `<li>${
-                          translations[lang]["action-ra"] ||
-                          "Consider rheumatology referral for RA evaluation"
-                        }</li>`
-                      : ""
-                  }
-                </ul>
-              </div>
-            `;
+                      <div class="alert alert-light border mb-3">
+                          <h5><i class="fas fa-info-circle text-primary me-2"></i> ${
+                            translations[lang]["positive-interpretation"]
+                          }</h5>
+                          <div class="row mt-2">
+                              <div class="col-md-4">
+                                  <div class="d-flex align-items-center">
+                                      <span class="badge bg-${
+                                        result.ctx ? "danger" : "secondary"
+                                      } me-2">CTX-II</span>
+                                      <span>${
+                                        result.ctx ? "Positive" : "Negative"
+                                      }</span>
+                                  </div>
+                              </div>
+                              <div class="col-md-4">
+                                  <div class="d-flex align-items-center">
+                                      <span class="badge bg-${
+                                        result.comp ? "danger" : "secondary"
+                                      } me-2">COMP</span>
+                                      <span>${
+                                        result.comp ? "Positive" : "Negative"
+                                      }</span>
+                                  </div>
+                              </div>
+                              <div class="col-md-4">
+                                  <div class="d-flex align-items-center">
+                                      <span class="badge bg-${
+                                        result.neopterin
+                                          ? "danger"
+                                          : "secondary"
+                                      } me-2">Neopterin</span>
+                                      <span>${
+                                        result.neopterin
+                                          ? "Positive"
+                                          : "Negative"
+                                      }</span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="alert alert-info">
+                          <h5><i class="fas fa-clipboard-check text-info me-2"></i> ${
+                            translations[lang]["recommended-action"] ||
+                            "Recommended Clinical Action"
+                          }</h5>
+                          <p>${translations[lang]["positive-action"]}</p>
+                          <ul class="mb-0">
+                              <li>${
+                                translations[lang]["action-1"] ||
+                                "Consider radiographic evaluation (X-ray/MRI)"
+                              }</li>
+                              <li>${
+                                translations[lang]["action-2"] ||
+                                "Implement physical therapy regimen"
+                              }</li>
+                              <li>${
+                                translations[lang]["action-3"] ||
+                                "Schedule follow-up biomarker testing in 3 months"
+                              }</li>
+                              ${
+                                result.neopterin
+                                  ? `<li>${
+                                      translations[lang]["action-ra"] ||
+                                      "Consider rheumatology referral for RA evaluation"
+                                    }</li>`
+                                  : ""
+                              }
+                          </ul>
+                      </div>
+                  `;
           } else {
             interpretation = `
-              <div class="alert alert-light border mb-3">
-                <h5><i class="fas fa-info-circle text-primary me-2"></i> ${
-                  translations[lang]["negative-interpretation"]
-                }</h5>
-                <p class="mb-0">${
-                  translations[lang]["no-biomarker-note"] ||
-                  "No significant elevation in cartilage degradation biomarkers detected."
-                }</p>
-              </div>
-              <div class="alert alert-info">
-                <h5><i class="fas fa-clipboard-check text-info me-2"></i> ${
-                  translations[lang]["recommended-action"] ||
-                  "Recommended Clinical Action"
-                }</h5>
-                <p>${translations[lang]["negative-action"]}</p>
-                <ul class="mb-0">
-                  <li>${
-                    translations[lang]["followup-1"] ||
-                    "For ACL patients: retest in 6 months"
-                  }</li>
-                  <li>${
-                    translations[lang]["followup-2"] ||
-                    "Monitor for clinical symptoms"
-                  }</li>
-                  <li>${
-                    translations[lang]["followup-3"] ||
-                    "Continue preventive measures"
-                  }</li>
-                </ul>
-              </div>
-            `;
+                      <div class="alert alert-light border mb-3">
+                          <h5><i class="fas fa-info-circle text-primary me-2"></i> ${
+                            translations[lang]["negative-interpretation"]
+                          }</h5>
+                          <p class="mb-0">${
+                            translations[lang]["no-biomarker-note"] ||
+                            "No significant elevation in cartilage degradation biomarkers detected."
+                          }</p>
+                      </div>
+                      <div class="alert alert-info">
+                          <h5><i class="fas fa-clipboard-check text-info me-2"></i> ${
+                            translations[lang]["recommended-action"] ||
+                            "Recommended Clinical Action"
+                          }</h5>
+                          <p>${translations[lang]["negative-action"]}</p>
+                          <ul class="mb-0">
+                              <li>${
+                                translations[lang]["followup-1"] ||
+                                "For ACL patients: retest in 6 months"
+                              }</li>
+                              <li>${
+                                translations[lang]["followup-2"] ||
+                                "Monitor for clinical symptoms"
+                              }</li>
+                              <li>${
+                                translations[lang]["followup-3"] ||
+                                "Continue preventive measures"
+                              }</li>
+                          </ul>
+                      </div>
+                  `;
           }
         }
 
         resultContainer.innerHTML = `
-          <div class="test-result slide-up">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <h4 class="mb-0"><i class="fas fa-${icon} text-${resultClass} me-2"></i> ${resultText}</h4>
-              <span class="badge bg-${resultClass}">${
+              <div class="test-result slide-up">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                      <h4 class="mb-0"><i class="fas fa-${icon} text-${resultClass} me-2"></i> ${resultText}</h4>
+                      <span class="badge bg-${resultClass}">${
           result.status === "invalid"
             ? "INVALID"
             : result.ctx || result.comp || result.neopterin
             ? "POSITIVE"
             : "NEGATIVE"
         }</span>
-            </div>
-            
-            <div class="row">
-              <div class="col-md-6">
-                <img src="${imageUrl}" class="test-result-image w-100" alt="Test strip result">
-              </div>
-              <div class="col-md-6 text-start">
-                <div class="alert alert-${resultClass}">
-                  <h5><i class="fas fa-${icon} me-2"></i> ${
+                  </div>
+                  
+                  <div class="row">
+                      <div class="col-md-6">
+                          <img src="${imageUrl}" class="test-result-image w-100" alt="Test strip result">
+                      </div>
+                      <div class="col-md-6 text-start">
+                          <div class="alert alert-${resultClass}">
+                              <h5><i class="fas fa-${icon} me-2"></i> ${
           translations[lang]["result-summary"] || "Test Summary"
         }</h5>
-                  <p class="mb-2"><strong>CTX-II:</strong> ${
-                    result.ctx ? "Positive" : "Negative"
-                  }</p>
-                  <p class="mb-2"><strong>COMP:</strong> ${
-                    result.comp ? "Positive" : "Negative"
-                  }</p>
-                  <p class="mb-0"><strong>Neopterin:</strong> ${
-                    result.neopterin ? "Positive" : "Negative"
-                  }</p>
-                </div>
+                              <p class="mb-2"><strong>CTX-II:</strong> ${
+                                result.ctx ? "Positive" : "Negative"
+                              }</p>
+                              <p class="mb-2"><strong>COMP:</strong> ${
+                                result.comp ? "Positive" : "Negative"
+                              }</p>
+                              <p class="mb-0"><strong>Neopterin:</strong> ${
+                                result.neopterin ? "Positive" : "Negative"
+                              }</p>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  ${interpretation}
+                  
+                  <div class="mt-4">
+                      <button class="btn btn-primary me-2">
+                          <i class="fas fa-share-alt me-1"></i> 
+                          ${translations[lang]["share-results"]}
+                      </button>
+                      <button class="btn btn-outline-primary me-2">
+                          <i class="fas fa-file-pdf me-1"></i> 
+                          ${translations[lang]["download-report"]}
+                      </button>
+                      <button class="btn btn-outline-secondary" id="consultBtn">
+                          <i class="fas fa-user-md me-1"></i> 
+                          ${
+                            translations[lang]["consult-specialist"] ||
+                            "Consult Specialist"
+                          }
+                      </button>
+                  </div>
               </div>
-            </div>
-            
-            ${interpretation}
-            
-            <div class="mt-4">
-              <button class="btn btn-primary me-2">
-                <i class="fas fa-share-alt me-1"></i> 
-                ${translations[lang]["share-results"]}
-              </button>
-              <button class="btn btn-outline-primary me-2">
-                <i class="fas fa-file-pdf me-1"></i> 
-                ${translations[lang]["download-report"]}
-              </button>
-              <button class="btn btn-outline-secondary" id="consultBtn">
-                <i class="fas fa-user-md me-1"></i> 
-                ${
-                  translations[lang]["consult-specialist"] ||
-                  "Consult Specialist"
-                }
-              </button>
-            </div>
-          </div>
-        `;
+          `;
 
         // Show save results section
         saveResultsSection.style.display = "block";
@@ -2976,13 +2930,13 @@
 
       function showAlert(message, type) {
         resultContainer.innerHTML = `
-        <div class="alert alert-${type}">
-          <i class="fas fa-${
-            type === "danger" ? "exclamation-triangle" : "info-circle"
-          } me-2"></i>
-          ${message}
-        </div>
-      `;
+          <div class="alert alert-${type}">
+              <i class="fas fa-${
+                type === "danger" ? "exclamation-triangle" : "info-circle"
+              } me-2"></i>
+              ${message}
+          </div>
+          `;
       }
 
       // AI Assistant Chat Functionality
@@ -3031,7 +2985,7 @@
       aiCloseBtn.addEventListener("click", toggleChat);
 
       // Handle sending messages
-      function handleSendMessage() {
+      async function handleSendMessage() {
         const message = aiUserInput.value.trim();
         if (message) {
           appendMessage("user", message);
@@ -3041,25 +2995,41 @@
           const thinkingDiv = document.createElement("div");
           thinkingDiv.className = "message thinking-message";
           thinkingDiv.innerHTML = `
-            <div class="d-flex align-items-center">
-              <strong>${
-                translations[languageSelector.value]["ai-name"]
-              }</strong>
-              <div class="thinking-dots ms-2">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </div>
-          `;
+                  <div class="d-flex align-items-center">
+                      <strong>${
+                        translations[languageSelector.value]["ai-name"]
+                      }</strong>
+                      <div class="thinking-dots ms-2">
+                          <span></span>
+                          <span></span>
+                          <span></span>
+                      </div>
+                  </div>
+              `;
           aiChatBody.appendChild(thinkingDiv);
           aiChatBody.scrollTop = aiChatBody.scrollHeight;
 
-          // Simulate AI response after delay
-          setTimeout(() => {
+          try {
+            // Call the API
+            const response = await fetchAIResponse(message);
+
+            // Remove thinking indicator
             aiChatBody.removeChild(thinkingDiv);
-            generateAIResponse(message);
-          }, 1500);
+
+            // Display API response
+            appendMessage("assistant", response, true);
+          } catch (error) {
+            // Remove thinking indicator
+            aiChatBody.removeChild(thinkingDiv);
+
+            // Show error message
+            appendMessage(
+              "assistant",
+              "Sorry, I'm having trouble connecting to the AI service. Please try again later.",
+              false
+            );
+            console.error("API Error:", error);
+          }
         }
       }
 
@@ -3069,132 +3039,53 @@
       });
 
       // Quick action buttons
-      quickActionBtns.forEach((btn) => {
-        btn.addEventListener("click", function () {
-          const question = this.getAttribute("data-question");
+      document.addEventListener("click", function (e) {
+        if (e.target.closest(".quick-action-btn")) {
+          const btn = e.target.closest(".quick-action-btn");
+          const question = btn.getAttribute("data-question");
           aiUserInput.value = question;
           handleSendMessage();
-        });
+        }
       });
 
-      // Generate AI response based on user input
-      function generateAIResponse(userMessage) {
+      async function fetchAIResponse(message) {
         const lang = languageSelector.value;
-        let response = "";
-        let includeQuickActions = true;
 
-        // Simple keyword-based response system
-        const lowerMessage = userMessage.toLowerCase();
+        // Prepare the request data
+        const requestData = {
+          message: message,
+          language: lang,
+          context: "knee osteoarthritis biomarker analysis",
+        };
 
-        if (lowerMessage.includes("ctx") || lowerMessage.includes("ctxi")) {
-          response = `
-            <strong>CTX-II Interpretation:</strong><br>
-            ${translations[lang]["ctx-positive"]}<br><br>
-            <strong>Clinical Significance:</strong><br>
-            Elevated CTX-II levels indicate increased type II collagen degradation, 
-            which is a marker for cartilage breakdown. In ACL-reconstructed patients, 
-            persistent elevation suggests ongoing PTOA development.<br><br>
-            <strong>Management:</strong><br>
-            - Consider imaging (MRI for cartilage assessment)<br>
-            - Implement chondroprotective measures<br>
-            - Monitor every 3-6 months<br>
-            - Consider physical therapy focused on joint protection
-          `;
-        } else if (lowerMessage.includes("comp")) {
-          response = `
-            <strong>COMP Interpretation:</strong><br>
-            ${translations[lang]["comp-positive"]}<br><br>
-            <strong>Clinical Significance:</strong><br>
-            COMP is a marker of cartilage turnover. Elevated levels may indicate 
-            either cartilage repair or degradation. In context with CTX-II, helps 
-            determine if the process is predominantly degenerative.<br><br>
-            <strong>Pattern Analysis:</strong><br>
-            - CTX-II+ & COMP+: Likely active degeneration<br>
-            - CTX-II- & COMP+: Possible repair phase<br>
-            - Both negative: Normal cartilage homeostasis
-          `;
-        } else if (
-          lowerMessage.includes("neopterin") ||
-          lowerMessage.includes("ra")
-        ) {
-          response = `
-            <strong>Neopterin Interpretation:</strong><br>
-            ${translations[lang]["neopterin-positive"]}<br><br>
-            <strong>OA vs RA Differentiation:</strong><br>
-            Neopterin helps distinguish inflammatory arthritis (like RA) from 
-            osteoarthritis:<br><br>
-            - <strong>OA Pattern:</strong> CTX-II+ and/or COMP+, Neopterin-<br>
-            - <strong>RA Pattern:</strong> Neopterin+, often with CTX-II+<br><br>
-            <strong>Action:</strong> If Neopterin positive, consider:<br>
-            - Rheumatology referral<br>
-            - Additional RA-specific tests (RF, anti-CCP)<br>
-            - Inflammatory markers (CRP, ESR)
-          `;
-        } else if (
-          lowerMessage.includes("invalid") ||
-          lowerMessage.includes("error")
-        ) {
-          response = `
-            <strong>Invalid Test Results:</strong><br>
-            ${translations[lang]["invalid-interpretation"]}<br>
-            <ul>
-              <li>${translations[lang]["invalid-reason-1"]}</li>
-              <li>${translations[lang]["invalid-reason-2"]}</li>
-              <li>${translations[lang]["invalid-reason-3"]}</li>
-            </ul>
-            <strong>Recommended Action:</strong><br>
-            ${translations[lang]["invalid-action"]}
-          `;
-        } else if (
-          lowerMessage.includes("how to use") ||
-          lowerMessage.includes("instructions")
-        ) {
-          response = `
-            <strong>Test Procedure:</strong><br>
-            1. ${translations[lang]["manual-step-1"]}<br>
-            2. ${translations[lang]["manual-step-2"]}<br>
-            3. ${translations[lang]["manual-step-3"]}<br>
-            4. ${translations[lang]["manual-step-4"]}<br><br>
-            <strong>Important Notes:</strong><br>
-            - Use first morning urine for most concentrated sample<br>
-            - Read results at exactly 10 minutes<br>
-            - Do not interpret after 15 minutes<br>
-            - Store tests at room temperature
-          `;
-          includeQuickActions = false;
-        } else if (
-          lowerMessage.includes("accuracy") ||
-          lowerMessage.includes("sensitivity")
-        ) {
-          response = `
-            <strong>Test Performance Characteristics:</strong><br>
-            - <strong>Sensitivity:</strong> 92% for CTX-II, 88% for COMP<br>
-            - <strong>Specificity:</strong> 94% for CTX-II, 90% for COMP<br>
-            - <strong>PPV:</strong> 89% for PTOA prediction<br>
-            - <strong>NPV:</strong> 93%<br><br>
-            <strong>Compared to ELISA:</strong><br>
-            Concordance rates:<br>
-            - CTX-II: 96%<br>
-            - COMP: 94%<br>
-            - Neopterin: 91%<br><br>
-            <strong>Clinical Validation:</strong><br>
-            Validated in 3 prospective studies with ACL-reconstructed patients (n=482)
-          `;
-        } else {
-          // Default response
-          response = `
-            I can help interpret KneeMarker test results and provide clinical guidance. 
-            Please ask about:<br><br>
-            - Specific biomarkers (CTX-II, COMP, Neopterin)<br>
-            - Test result interpretation<br>
-            - Clinical management recommendations<br>
-            - How to perform the test<br>
-            - Accuracy and validation data<br><br>
-            For example, you could ask: "What does a positive CTX-II result mean?"
-          `;
+        try {
+          const response = await fetch(
+            "https://api.shecodes.io/ai/v1/generate",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${apiKey}`,
+              },
+              body: JSON.stringify(requestData),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(
+              `API request failed with status ${response.status}`
+            );
+          }
+
+          const data = await response.json();
+          return (
+            data.response ||
+            "I couldn't process that request. Please try again."
+          );
+        } catch (error) {
+          console.error("API call failed:", error);
+          throw error;
         }
-
-        appendMessage("assistant", response, includeQuickActions);
       }
 
       function appendMessage(role, content, showQuickActions = true) {
@@ -3208,14 +3099,14 @@
         const messageDiv = document.createElement("div");
         messageDiv.className = `message ${role}-message`;
         messageDiv.innerHTML = `
-          <div class="d-flex align-items-center mb-1">
-            <strong>${
-              role === "user" ? "You" : translations[lang]["ai-name"]
-            }</strong>
-            <small class="text-muted ms-2">${timeString}</small>
-          </div>
-          <div>${content}</div>
-        `;
+              <div class="d-flex align-items-center mb-1">
+                  <strong>${
+                    role === "user" ? "You" : translations[lang]["ai-name"]
+                  }</strong>
+                  <small class="text-muted ms-2">${timeString}</small>
+              </div>
+              <div>${content}</div>
+          `;
 
         // Remove any existing thinking message
         const thinkingMessages = document.querySelectorAll(".thinking-message");
@@ -3229,26 +3120,17 @@
           const quickActionsDiv = document.createElement("div");
           quickActionsDiv.className = "quick-actions mt-3";
           quickActionsDiv.innerHTML = `
-            <button class="quick-action-btn" data-question="Explain the clinical significance of a positive CTX-II line">
-              ${translations[lang]["quick-action-1"]}
-            </button>
-            <button class="quick-action-btn" data-question="How do I differentiate OA from RA using this test?">
-              ${translations[lang]["quick-action-2"]}
-            </button>
-            <button class="quick-action-btn" data-question="What does an invalid test result mean?">
-              ${translations[lang]["quick-action-3"]}
-            </button>
-          `;
+                  <button class="quick-action-btn" data-question="Explain the clinical significance of a positive CTX-II line">
+                      ${translations[lang]["quick-action-1"]}
+                  </button>
+                  <button class="quick-action-btn" data-question="How do I differentiate OA from RA using this test?">
+                      ${translations[lang]["quick-action-2"]}
+                  </button>
+                  <button class="quick-action-btn" data-question="What does an invalid test result mean?">
+                      ${translations[lang]["quick-action-3"]}
+                  </button>
+              `;
           messageDiv.appendChild(quickActionsDiv);
-
-          // Reattach event listeners to new quick action buttons
-          document.querySelectorAll(".quick-action-btn").forEach((btn) => {
-            btn.addEventListener("click", function () {
-              const question = this.getAttribute("data-question");
-              aiUserInput.value = question;
-              handleSendMessage();
-            });
-          });
         }
       }
 
@@ -3262,10 +3144,10 @@
             appendMessage(
               "assistant",
               `I've analyzed the uploaded ${this.files[0].name}. This appears to be a previous test result showing:<br><br>
-              - CTX-II: Positive<br>
-              - COMP: Negative<br>
-              - Neopterin: Negative<br><br>
-              This pattern suggests early cartilage degradation without significant immune involvement. Would you like me to compare this with current results?`
+                      - CTX-II: Positive<br>
+                      - COMP: Negative<br>
+                      - Neopterin: Negative<br><br>
+                      This pattern suggests early cartilage degradation without significant immune involvement. Would you like me to compare this with current results?`
             );
           }, 2000);
         }
@@ -3356,17 +3238,17 @@
 
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td>${date}</td>
-          <td>${ctx === "positive" ? "Positive" : "Negative"}</td>
-          <td>${comp === "positive" ? "Positive" : "Negative"}</td>
-          <td>${neopterin === "positive" ? "Positive" : "Negative"}</td>
-          <td><span class="${statusClass}">${status}</span></td>
-          <td>
-            <button class="btn btn-sm btn-outline-danger tracker-delete">
-              <i class="fas fa-trash-alt"></i>
-            </button>
-          </td>
-        `;
+              <td>${date}</td>
+              <td>${ctx === "positive" ? "Positive" : "Negative"}</td>
+              <td>${comp === "positive" ? "Positive" : "Negative"}</td>
+              <td>${neopterin === "positive" ? "Positive" : "Negative"}</td>
+              <td><span class="${statusClass}">${status}</span></td>
+              <td>
+                  <button class="btn btn-sm btn-outline-danger tracker-delete">
+                      <i class="fas fa-trash-alt"></i>
+                  </button>
+              </td>
+          `;
 
         trackerTableBody.appendChild(row);
 
@@ -3427,23 +3309,32 @@
       updateProgressTracker(1); // Start at step 2
 
       // Sample AI welcome message
-      appendMessage(
-        "assistant",
-        translations[languageSelector.value]["ai-welcome"] +
-          "<ul><li>" +
-          translations[languageSelector.value]["ai-help-1"] +
-          "</li><li>" +
-          translations[languageSelector.value]["ai-help-2"] +
-          "</li><li>" +
-          translations[languageSelector.value]["ai-help-3"] +
-          "</li><li>" +
-          translations[languageSelector.value]["ai-help-4"] +
-          "</li><li>" +
-          translations[languageSelector.value]["ai-help-5"] +
-          "</li></ul>" +
-          translations[languageSelector.value]["ai-prompt"],
-        true
-      );
+      function initializeChat() {
+        // Clear any existing messages
+        aiChatBody.innerHTML = "";
+
+        // Add welcome message
+        appendMessage(
+          "assistant",
+          translations[languageSelector.value]["ai-welcome"] +
+            "<ul><li>" +
+            translations[languageSelector.value]["ai-help-1"] +
+            "</li><li>" +
+            translations[languageSelector.value]["ai-help-2"] +
+            "</li><li>" +
+            translations[languageSelector.value]["ai-help-3"] +
+            "</li><li>" +
+            translations[languageSelector.value]["ai-help-4"] +
+            "</li><li>" +
+            translations[languageSelector.value]["ai-help-5"] +
+            "</li></ul>" +
+            translations[languageSelector.value]["ai-prompt"],
+          true
+        );
+      }
+
+      // Call this when the page loads and when language is changed
+      initializeChat();
     </script>
   </body>
 </html>
