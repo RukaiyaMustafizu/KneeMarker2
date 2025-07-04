@@ -2995,17 +2995,15 @@
           const thinkingDiv = document.createElement("div");
           thinkingDiv.className = "message thinking-message";
           thinkingDiv.innerHTML = `
-                  <div class="d-flex align-items-center">
-                      <strong>${
-                        translations[languageSelector.value]["ai-name"]
-                      }</strong>
-                      <div class="thinking-dots ms-2">
-                          <span></span>
-                          <span></span>
-                          <span></span>
-                      </div>
-                  </div>
-              `;
+      <div class="d-flex align-items-center">
+        <strong>${translations[languageSelector.value]["ai-name"]}</strong>
+        <div class="thinking-dots ms-2">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    `;
           aiChatBody.appendChild(thinkingDiv);
           aiChatBody.scrollTop = aiChatBody.scrollHeight;
 
@@ -3050,25 +3048,16 @@
 
       async function fetchAIResponse(message) {
         const lang = languageSelector.value;
-
-        // Prepare the request data
-        const requestData = {
-          message: message,
-          language: lang,
-          context: "knee osteoarthritis biomarker analysis",
-        };
+        const context =
+          "You are a medical AI assistant specialized in orthopedic conditions, particularly ACL injuries and post-traumatic osteoarthritis (PTOA). You provide accurate, professional medical information about biomarker interpretation, test results, and clinical recommendations.";
 
         try {
+          // Encode the prompt for URL
+          const encodedPrompt = encodeURIComponent(message);
+          const encodedContext = encodeURIComponent(context);
+
           const response = await fetch(
-            "https://api.shecodes.io/ai/v1/generate",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${apiKey}`,
-              },
-              body: JSON.stringify(requestData),
-            }
+            `https://api.shecodes.io/ai/v1/generate?prompt=${encodedPrompt}&context=${encodedContext}&key=${apiKey}`
           );
 
           if (!response.ok) {
@@ -3079,8 +3068,7 @@
 
           const data = await response.json();
           return (
-            data.response ||
-            "I couldn't process that request. Please try again."
+            data.answer || "I couldn't process that request. Please try again."
           );
         } catch (error) {
           console.error("API call failed:", error);
